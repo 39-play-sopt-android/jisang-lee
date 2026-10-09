@@ -55,6 +55,8 @@ import org.sopt.play.ui.theme.PlaySoptTheme
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    onLogin: (String, String) -> Unit,
+    onSignUp: () -> Unit,
 ) {
     val email = rememberTextFieldState()
     val password = remember { TextFieldState() }
@@ -99,15 +101,12 @@ fun LoginScreen(
         PlayPrimaryButton(
             text = "로그인",
             enabled = canLogin,
-//            onClick = { onLogin(emailText, passwordText) },
-            onClick = {}
+            onClick = { onLogin(emailText, passwordText) },
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        SignUpPrompt(onClick = {
-
-        })
+        SignUpPrompt(onClick = onSignUp)
     }
 }
 
@@ -160,13 +159,5 @@ private fun SignUpPrompt(
             color = Color(0xFF23272A),
             modifier = Modifier.clickable(onClick = onClick),
         )
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun LoginScreenPreview() {
-    PlaySoptTheme {
-        LoginScreen(Modifier.fillMaxSize())
     }
 }

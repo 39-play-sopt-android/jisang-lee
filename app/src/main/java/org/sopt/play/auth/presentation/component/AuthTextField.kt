@@ -108,16 +108,18 @@ fun EmailAuthTextField(
 fun PasswordAuthTextField(
     state: TextFieldState,
     isError: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    title: String = "비밀번호",
+    errorText: String? = if (isError) {
+        "비밀번호는 6자 이상 입력해주세요."
+    } else {
+        null
+    },
 ) {
     AuthFieldLayout(
-        title = "비밀번호",
+        title = title,
         modifier = modifier,
-        errorText = if (isError) {
-            "비밀번호는 6자 이상 입력해주세요."
-        } else {
-            null
-        }
+        errorText = errorText
     ) {
         BasicSecureTextField(
             state = state,
@@ -145,6 +147,38 @@ fun PasswordAuthTextField(
         )
     }
 }
+
+@Composable
+fun NameAuthTextField(
+    state: TextFieldState,
+    modifier: Modifier = Modifier,
+) {
+    AuthFieldLayout(
+        title = "이름",
+        modifier = modifier,
+    ) {
+        BasicTextField(
+            state = state,
+            modifier = Modifier.fillMaxWidth(),
+            lineLimits = TextFieldLineLimits.SingleLine,
+            textStyle = inputStyle,
+            cursorBrush = SolidColor(textColor),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+            ),
+            decorator = { innerTextField ->
+                InputBox(
+                    placeholder = "홍길동",
+                    isEmpty = state.text.isEmpty(),
+                    innerTextField = innerTextField,
+                )
+            },
+        )
+    }
+}
+
+
 
 @Composable
 private fun AuthFieldLayout(

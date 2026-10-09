@@ -30,11 +30,10 @@ class LoginActivity : ComponentActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-//            PlayPrimaryButton(
-//                text = "로그인",
-//                enabled = canLogin,
-//                onClick = { onLogin(emailText, passwordText) }
-//            )
+            registeredEmail = result.data
+                ?.getStringExtra(RegisterActivity.EXTRA_EMAIL)
+            registeredPassword = result.data
+                ?.getStringExtra(RegisterActivity.EXTRA_PASSWORD)
         }
     }
 
@@ -45,11 +44,12 @@ class LoginActivity : ComponentActivity() {
         setContent {
             PlaySoptTheme {
                 LoginScreen(
-//                    onLogin = ::tryLogin,
-//                    onSignUp = {
-////                        registerLauncher.launch(
-////                        )
-//                    },
+                    onLogin = ::tryLogin,
+                    onSignUp = {
+                        registerLauncher.launch(
+                            Intent(this, RegisterActivity::class.java)
+                        )
+                    },
                 )
             }
         }
