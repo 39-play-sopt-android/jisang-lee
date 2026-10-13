@@ -1,7 +1,5 @@
 package org.sopt.play.auth
 
-import android.R.attr.onClick
-import android.R.attr.text
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -10,16 +8,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat.enableEdgeToEdge
-import androidx.core.view.WindowInsetsCompat
 import org.sopt.play.MainActivity
-import org.sopt.play.R
 import org.sopt.play.auth.presentation.LoginScreen
-import org.sopt.play.ui.component.PlayPrimaryButton
-import org.sopt.play.ui.theme.PlaySoptTheme
-import kotlin.jvm.java
+import org.sopt.play.ui.theme.SoptTheme
 
 class LoginActivity : ComponentActivity() {
 
@@ -42,7 +33,7 @@ class LoginActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            PlaySoptTheme {
+            SoptTheme {
                 LoginScreen(
                     onLogin = ::tryLogin,
                     onSignUp = {

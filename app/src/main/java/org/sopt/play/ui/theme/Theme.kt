@@ -1,58 +1,165 @@
 package org.sopt.play.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
+private val DefaultSoptColors = SoptColors()
+private val DefaultSoptTypography = SoptTypography()
+private val DefaultSoptShapes = SoptShapes()
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+private val LocalSoptColors = staticCompositionLocalOf {
+    DefaultSoptColors
+}
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
+private val LocalSoptTypography = staticCompositionLocalOf {
+    DefaultSoptTypography
+}
+
+private val LocalSoptShapes = staticCompositionLocalOf {
+    DefaultSoptShapes
+}
+
+object SoptTheme {
+    val colors: SoptColors
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalSoptColors.current
+
+    val typography: SoptTypography
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalSoptTypography.current
+
+    val shapes: SoptShapes
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalSoptShapes.current
+}
 
 @Composable
-fun PlaySoptTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+fun SoptTheme(
+    colors: SoptColors = DefaultSoptColors,
+    typography: SoptTypography = DefaultSoptTypography,
+    shapes: SoptShapes = DefaultSoptShapes,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val materialColors = remember(colors) {
+        colors.toMaterialColorScheme()
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    val materialTypography = remember(typography) {
+        typography.toMaterialTypography()
+    }
+
+    val materialShapes = remember(shapes) {
+        Shapes(
+            extraSmall = shapes.input,
+            small = shapes.input,
+            medium = shapes.input,
+            large = shapes.input,
+            extraLarge = shapes.input
+        )
+    }
+
+    CompositionLocalProvider(
+        LocalSoptColors provides colors,
+        LocalSoptTypography provides typography,
+        LocalSoptShapes provides shapes
+    ) {
+        MaterialTheme(
+            colorScheme = materialColors,
+            typography = materialTypography,
+            shapes = materialShapes,
+            content = content
+        )
+    }
 }
+
+private fun SoptColors.toMaterialColorScheme(): ColorScheme =
+    lightColorScheme(
+        primary = buttonBackground,
+        onPrimary = buttonContent,
+        primaryContainer = disabledBackground,
+        onPrimaryContainer = textPrimary,
+        inversePrimary = textSecondary,
+
+        secondary = textInput,
+        onSecondary = background,
+        secondaryContainer = disabledBackground,
+        onSecondaryContainer = textLabel,
+
+        tertiary = textInput,
+        onTertiary = background,
+        tertiaryContainer = disabledBackground,
+        onTertiaryContainer = textLabel,
+
+        background = background,
+        onBackground = textPrimary,
+        surface = background,
+        onSurface = textLabel,
+        surfaceVariant = disabledBackground,
+        onSurfaceVariant = textInput,
+        surfaceTint = buttonBackground,
+
+        inverseSurface = textLabel,
+        inverseOnSurface = buttonContent,
+
+        error = error,
+        onError = background,
+        errorContainer = background,
+        onErrorContainer = error,
+
+        outline = borderDefault,
+        outlineVariant = borderDefault,
+        scrim = textPrimary,
+
+        surfaceBright = background,
+        surfaceDim = disabledBackground,
+        surfaceContainer = disabledBackground,
+        surfaceContainerHigh = disabledBackground,
+        surfaceContainerHighest = disabledBackground,
+        surfaceContainerLow = background,
+        surfaceContainerLowest = background,
+
+        primaryFixed = disabledBackground,
+        primaryFixedDim = borderDefault,
+        onPrimaryFixed = textPrimary,
+        onPrimaryFixedVariant = textInput,
+
+        secondaryFixed = disabledBackground,
+        secondaryFixedDim = borderDefault,
+        onSecondaryFixed = textLabel,
+        onSecondaryFixedVariant = textInput,
+
+        tertiaryFixed = disabledBackground,
+        tertiaryFixedDim = borderDefault,
+        onTertiaryFixed = textLabel,
+        onTertiaryFixedVariant = textInput
+    )
+
+private fun SoptTypography.toMaterialTypography(): Typography =
+    Typography(
+        displayLarge = b28,
+        displayMedium = b28,
+        displaySmall = b28,
+        headlineLarge = b28,
+        headlineMedium = b28,
+        headlineSmall = b28,
+        titleLarge = b28,
+        titleMedium = m18,
+        titleSmall = sb16,
+        bodyLarge = m18,
+        bodyMedium = m14,
+        bodySmall = m14,
+        labelLarge = sb14,
+        labelMedium = sb14,
+        labelSmall = sb14
+    )

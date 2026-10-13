@@ -10,12 +10,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PlaySopt">
+        android:theme="@style/Theme.Sopt">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.PlaySopt"
+            android:theme="@style/Theme.Sopt"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".auth.LoginActivity"
@@ -31,7 +31,7 @@
             android:name=".auth.RegisterActivity"
             android:exported="false"
             android:label="@string/title_activity_register"
-            android:theme="@style/Theme.PlaySopt"
+            android:theme="@style/Theme.Sopt"
             android:windowSoftInputMode="adjustResize" />
     </application>
 

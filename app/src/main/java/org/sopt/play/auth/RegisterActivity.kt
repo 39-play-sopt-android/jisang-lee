@@ -6,15 +6,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import org.sopt.play.auth.presentation.RegisterScreen
-import org.sopt.play.auth.ui.theme.PlaySoptTheme
+import org.sopt.play.ui.theme.SoptTheme
 
 class RegisterActivity : ComponentActivity() {
     companion object {
@@ -27,7 +20,7 @@ class RegisterActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PlaySoptTheme {
+            SoptTheme {
                 RegisterScreen(
                     onRegister = { name, email, password ->
                         val result = Intent().apply {

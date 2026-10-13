@@ -9,47 +9,52 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.PlatformTextStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import org.sopt.play.R
 import org.sopt.play.auth.presentation.component.EmailAuthTextField
 import org.sopt.play.auth.presentation.component.NameAuthTextField
 import org.sopt.play.auth.presentation.component.PasswordAuthTextField
-import org.sopt.play.ui.component.PlayPrimaryButton
+import org.sopt.play.ui.component.SoptPrimaryButton
+import org.sopt.play.ui.theme.SoptTheme
 
 @Composable
 fun RegisterScreen(
-    onRegister: (name: String, email: String, password: String) -> Unit,
     modifier: Modifier = Modifier,
+    onRegister: (name: String, email: String, password: String) -> Unit
 ) {
     val name = rememberTextFieldState()
     val email = rememberTextFieldState()
-    val password = remember { TextFieldState() }
-    val passwordConfirm = remember { TextFieldState() }
+    val password = rememberTextFieldState()
+    val passwordConfirm = rememberTextFieldState()
 
     val nameText = name.text.toString().trim()
     val emailText = email.text.toString().trim()
     val passwordText = password.text.toString()
     val confirmText = passwordConfirm.text.toString()
 
-    val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(emailText).matches()
-    val isEmailError = emailText.isNotEmpty() && !isEmailValid
-    val isPasswordError = passwordText.isNotEmpty() && passwordText.length < 6
-    val isConfirmError = confirmText.isNotEmpty() && confirmText != passwordText
+    val isEmailValid = Patterns.EMAIL_ADDRESS
+        .matcher(emailText)
+        .matches()
+
+    val emailError = when {
+        emailText.isEmpty() || isEmailValid -> null
+        else -> "올바른 이메일을 입력해주세요."
+    }
+
+    val passwordError = when {
+        passwordText.isEmpty() || passwordText.length >= 6 -> null
+        else -> "비밀번호는 6자 이상 입력해주세요."
+    }
+
+    val confirmError = when {
+        confirmText.isEmpty() || confirmText == passwordText -> null
+        else -> "비밀번호가 일치하지 않아요."
+    }
 
     val canRegister =
         nameText.isNotEmpty() &&
@@ -60,26 +65,15 @@ fun RegisterScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(SoptTheme.colors.background)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
             .padding(top = 112.dp, bottom = 24.dp),
     ) {
         Text(
             text = "이메일로 회원가입",
-            style = TextStyle(
-                fontSize = 28.sp,
-                lineHeight = 33.6.sp,
-                letterSpacing = (-0.28).sp,
-                fontFamily = FontFamily(
-                    Font(R.font.pretendard_bold, FontWeight.Bold)
-                ),
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF121212),
-                platformStyle = PlatformTextStyle(
-                    includeFontPadding = false,
-                ),
-            ),
+            style = SoptTheme.typography.b28,
+            color = SoptTheme.colors.textPrimary
         )
 
         Spacer(Modifier.height(40.dp))
@@ -87,33 +81,32 @@ fun RegisterScreen(
         Column(
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
-            NameAuthTextField(state = name)
+            NameAuthTextField(
+                state = name
+            )
 
             EmailAuthTextField(
                 state = email,
-                isError = isEmailError,
+                errorText = emailError
             )
 
             PasswordAuthTextField(
                 state = password,
-                isError = isPasswordError,
+                errorText = passwordError,
+                imeAction = ImeAction.Next
             )
 
             PasswordAuthTextField(
                 state = passwordConfirm,
                 title = "비밀번호 확인",
-                isError = isConfirmError,
-                errorText = if (isConfirmError) {
-                    "비밀번호가 일치하지 않아요."
-                } else {
-                    null
-                },
+                errorText = confirmError,
+                imeAction = ImeAction.Done
             )
         }
 
         Spacer(Modifier.height(40.dp))
 
-        PlayPrimaryButton(
+        SoptPrimaryButton(
             text = "회원가입",
             enabled = canRegister,
             onClick = {
