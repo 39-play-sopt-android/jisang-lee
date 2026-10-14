@@ -1,7 +1,6 @@
 package org.sopt.play.ui.theme
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -35,9 +34,6 @@ private fun soptTextStyle(
     fontSize = size.sp,
     lineHeight = 1.2.em,
     letterSpacing = (-0.01).em,
-    platformStyle = PlatformTextStyle(
-        includeFontPadding = false
-    ),
     lineHeightStyle = LineHeightStyle(
         alignment = LineHeightStyle.Alignment.Center,
         trim = LineHeightStyle.Trim.None
