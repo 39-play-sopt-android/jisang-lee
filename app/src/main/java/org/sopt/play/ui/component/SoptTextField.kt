@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,15 +29,16 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.ui.theme.SoptTheme
 
 @Composable
 fun SoptTextField(
-    modifier: Modifier = Modifier,
     state: TextFieldState,
     label: String,
     placeholder: String,
+    modifier: Modifier = Modifier,
     errorText: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onKeyboardAction: KeyboardActionHandler? = null,
@@ -83,9 +85,9 @@ fun SoptTextField(
 
 @Composable
 internal fun SoptFieldLayout(
-    modifier: Modifier = Modifier,
     label: String,
     errorText: String?,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     val colors = SoptTheme.colors
@@ -97,9 +99,9 @@ internal fun SoptFieldLayout(
     ) {
         Text(
             text = label,
+            modifier = Modifier.padding(start = 8.dp),
             style = typography.sb16,
-            color = colors.textLabel,
-            modifier = Modifier.padding(start = 8.dp)
+            color = colors.textLabel
         )
 
         content()
@@ -107,9 +109,9 @@ internal fun SoptFieldLayout(
         if (errorText != null) {
             Text(
                 text = errorText,
+                modifier = Modifier.padding(start = 8.dp),
                 style = typography.m14,
-                color = colors.error,
-                modifier = Modifier.padding(start = 8.dp)
+                color = colors.error
             )
         }
     }
@@ -117,11 +119,11 @@ internal fun SoptFieldLayout(
 
 @Composable
 internal fun SoptFieldDecoration(
-    modifier: Modifier = Modifier,
     placeholder: String,
     isEmpty: Boolean,
     isFocused: Boolean,
     errorText: String?,
+    modifier: Modifier = Modifier,
     innerTextField: @Composable () -> Unit
 ) {
     val colors = SoptTheme.colors
@@ -181,5 +183,39 @@ internal fun Modifier.soptTextFieldSemantics(
 
     errorText?.let {
         error(it)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SoptTextFieldPreview() {
+    SoptTheme {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+        ) {
+            SoptTextField(
+                state = rememberTextFieldState(),
+                label = "이메일",
+                placeholder = "이메일 내놔",
+            )
+
+            SoptTextField(
+                state = rememberTextFieldState(
+                    initialText = "이건@내.이메일",
+                ),
+                label = "이메일",
+                placeholder = "이메일을 입력해주세요.",
+            )
+
+            SoptTextField(
+                state = rememberTextFieldState(
+                    initialText = "이건@네.이메일",
+                ),
+                label = "이메일",
+                placeholder = "이메일을 입력해주세요.",
+                errorText = "올바른 이메일을 입력해주세요.",
+            )
+        }
     }
 }

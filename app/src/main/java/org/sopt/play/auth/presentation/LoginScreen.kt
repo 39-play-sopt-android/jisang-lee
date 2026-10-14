@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.auth.presentation.component.EmailAuthTextField
 import org.sopt.play.auth.presentation.component.PasswordAuthTextField
@@ -23,9 +24,9 @@ import org.sopt.play.ui.theme.SoptTheme
 
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier,
     onLogin: (String, String) -> Unit,
     onSignUp: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val email = rememberTextFieldState()
     val password = rememberTextFieldState()
@@ -96,8 +97,8 @@ fun LoginScreen(
 
 @Composable
 private fun SignUpPrompt(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val colors = SoptTheme.colors
     val textStyle = SoptTheme.typography.m14
@@ -118,9 +119,29 @@ private fun SignUpPrompt(
 
         Text(
             text = "회원가입하기",
+            modifier = Modifier.clickable(onClick = onClick),
             style = textStyle,
             color = colors.textLabel,
-            modifier = Modifier.clickable(onClick = onClick),
         )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun LoginScreenPreview() {
+    SoptTheme {
+        LoginScreen(
+            onLogin = { _, _ -> },
+            onSignUp = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SignUpPromptPreview() {
+    SoptTheme {
+        SignUpPrompt(onClick = { })
     }
 }

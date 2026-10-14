@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.auth.presentation.component.EmailAuthTextField
 import org.sopt.play.auth.presentation.component.NameAuthTextField
@@ -24,8 +25,8 @@ import org.sopt.play.ui.theme.SoptTheme
 
 @Composable
 fun RegisterScreen(
-    modifier: Modifier = Modifier,
-    onRegister: (name: String, email: String, password: String) -> Unit
+    onRegister: (name: String, email: String, password: String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val name = rememberTextFieldState()
     val email = rememberTextFieldState()
@@ -113,5 +114,13 @@ fun RegisterScreen(
                 onRegister(nameText, emailText, passwordText)
             },
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RegisterScreenPreview() {
+    SoptTheme {
+        RegisterScreen(onRegister = { _, _, _ -> })
     }
 }

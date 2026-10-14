@@ -13,8 +13,8 @@ import org.sopt.play.ui.component.SoptTextField
 
 @Composable
 fun EmailAuthTextField(
-    modifier: Modifier = Modifier,
     state: TextFieldState,
+    modifier: Modifier = Modifier,
     errorText: String? = null,
     onKeyboardAction: KeyboardActionHandler? = null
 ) {
@@ -36,8 +36,8 @@ fun EmailAuthTextField(
 
 @Composable
 fun PasswordAuthTextField(
-    modifier: Modifier = Modifier,
     state: TextFieldState,
+    modifier: Modifier = Modifier,
     title: String = "비밀번호",
     errorText: String? = null,
     imeAction: ImeAction = ImeAction.Done,
@@ -61,8 +61,8 @@ fun PasswordAuthTextField(
 
 @Composable
 fun NameAuthTextField(
-    modifier: Modifier = Modifier,
     state: TextFieldState,
+    modifier: Modifier = Modifier,
     errorText: String? = null,
     onKeyboardAction: KeyboardActionHandler? = null
 ) {
