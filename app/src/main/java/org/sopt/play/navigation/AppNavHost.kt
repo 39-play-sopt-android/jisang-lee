@@ -31,6 +31,10 @@ fun AppNavHost(
         mutableStateOf<String?>(null)
     }
 
+    var registeredName by rememberSaveable {
+        mutableStateOf<String?>(null)
+    }
+
     NavHost(
         navController = navController,
         startDestination = AppRoute.Auth,
@@ -66,10 +70,11 @@ fun AppNavHost(
                     ).show()
                 }
             },
-            // 이름은 그냥 안써버리기
-            onRegister = { _, email, password ->
+            // 이름은 그냥 안써버리기 해놨는데 바로 메인에서 써버리네요;;
+            onRegister = { name, email, password ->
                 registeredEmail = email.trim()
                 registeredPassword = password
+                registeredName = name
 
                 navController.popBackStack<AppRoute.Login>(
                     inclusive = false
@@ -78,7 +83,7 @@ fun AppNavHost(
         )
 
         composable<AppRoute.Main> {
-            MainScreen(name = "Android")
+            MainScreen(name = registeredName?:"")
         }
     }
 }
