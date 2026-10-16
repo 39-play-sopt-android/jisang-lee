@@ -12,6 +12,10 @@ import org.sopt.play.R
 
 private val Pretendard = FontFamily(
     Font(
+        resId = R.font.pretendard_regular,
+        weight = FontWeight.Normal
+    ),
+    Font(
         resId = R.font.pretendard_medium,
         weight = FontWeight.Medium
     ),
@@ -46,6 +50,7 @@ data class SoptTypography(
     val m18: TextStyle = soptTextStyle(18, FontWeight.Medium),
     val sb16: TextStyle = soptTextStyle(16, FontWeight.SemiBold),
     val m14: TextStyle = soptTextStyle(14, FontWeight.Medium),
-    val sb14: TextStyle = soptTextStyle(14, FontWeight.SemiBold)
+    val sb14: TextStyle = soptTextStyle(14, FontWeight.SemiBold),
+    val r14: TextStyle = soptTextStyle(14, FontWeight.Normal)
 )
 
