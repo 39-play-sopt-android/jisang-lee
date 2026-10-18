@@ -6,6 +6,8 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import org.sopt.play.ui.component.SoptSecureTextField
@@ -43,6 +45,9 @@ fun PasswordAuthTextField(
     imeAction: ImeAction = ImeAction.Done,
     onKeyboardAction: KeyboardActionHandler? = null
 ) {
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     SoptSecureTextField(
         state = state,
         label = title,
@@ -54,7 +59,14 @@ fun PasswordAuthTextField(
             imeAction = imeAction,
             autoCorrectEnabled = false
         ),
-        onKeyboardAction = onKeyboardAction,
+        onKeyboardAction = onKeyboardAction ?: KeyboardActionHandler { performDefaultAction ->
+            if (imeAction == ImeAction.Done) {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            } else {
+                performDefaultAction()
+            }
+        },
         contentType = ContentType.Password
     )
 }

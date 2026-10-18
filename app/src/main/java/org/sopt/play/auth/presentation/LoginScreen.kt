@@ -33,7 +33,7 @@ import org.sopt.play.ui.theme.SoptTheme
 fun LoginScreen(
     onLogin: (String, String) -> Unit,
     onSignUp: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val email = rememberTextFieldState()
     val password = rememberTextFieldState()
@@ -85,7 +85,7 @@ fun LoginScreen(
                 Spacer(Modifier.height(40.dp))
 
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(32.dp),
+                    verticalArrangement = Arrangement.spacedBy(32.dp)
                 ) {
                     EmailAuthTextField(
                         state = email,
@@ -128,9 +128,9 @@ private fun SignUpPrompt(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(
             12.dp,
-            Alignment.CenterHorizontally,
+            Alignment.CenterHorizontally
         ),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = "아직 계정이 없으신가요?",
@@ -140,9 +140,13 @@ private fun SignUpPrompt(
 
         Text(
             text = "회원가입하기",
-            modifier = Modifier.clickable(onClick = onClick),
+            modifier = Modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = onClick
+            ),
             style = textStyle,
-            color = colors.textLabel,
+            color = colors.textLabel
         )
     }
 }
