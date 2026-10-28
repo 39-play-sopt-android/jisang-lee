@@ -1,41 +1,32 @@
 package org.sopt.play.main.presentation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import org.sopt.play.main.presentation.component.HomeBannerRow
-import org.sopt.play.main.presentation.component.HomeCategoryRow
-import org.sopt.play.main.presentation.component.HomeMenuRow
-import org.sopt.play.main.presentation.component.HomeProductCard
-import org.sopt.play.main.presentation.component.HomeTopBar
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import org.sopt.play.main.presentation.component.MainBottomBar
+import org.sopt.play.navigation.MainRoute
+import org.sopt.play.navigation.MainTab
 import org.sopt.play.ui.theme.SoptTheme
 
 @Composable
@@ -43,135 +34,82 @@ fun MainScreen(
     name: String,
     modifier: Modifier = Modifier
 ) {
-    var selectedMenu by rememberSaveable {
-        mutableStateOf("홈")
-    }
+    val navController = rememberNavController()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = backStackEntry?.destination
 
-    var selectedCategory by rememberSaveable {
-        mutableStateOf("전체")
-    }
-
-    val gridState = rememberLazyGridState()
+    val selectedTab = MainTab.entries.firstOrNull { tab ->
+        currentDestination?.hierarchy?.any { destination ->
+            destination.hasRoute(tab.route::class)
+        } == true
+    } ?: MainTab.HOME
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         containerColor = SoptTheme.colors.background,
-        topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(SoptTheme.colors.background)
-                    .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Top +
-                                    WindowInsetsSides.Horizontal
-                        )
-                    )
-            ) {
-                HomeTopBar(
-                    onSearchClick = {}
-                )
-            }
-        }
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        bottomBar = {
+            MainBottomBar(
+                selectedTab = selectedTab,
+                onTabSelected = { tab ->
+                    if (tab != selectedTab) {
+                        navController.navigate(tab.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
+            )
+        },
     ) { innerPadding ->
-        Box(
+        NavHost(
+            navController = navController,
+            startDestination = MainRoute.Home,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .consumeWindowInsets(innerPadding)
-                .imePadding()
+                .consumeWindowInsets(innerPadding),
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None },
+            predictivePopEnterTransition = { EnterTransition.None },
+            predictivePopExitTransition = { ExitTransition.None }
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxSize(),
-                state = gridState,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                item(
-                    key = "home_header",
-                    span = { GridItemSpan(maxLineSpan) }
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        HomeMenuRow(
-                            menus = HomeSampleData.menus,
-                            selectedMenu = selectedMenu,
-                            onMenuSelected = { menu ->
-                                selectedMenu = menu
-                            }
-                        )
+            composable<MainRoute.Home> {
+                HomeScreen(name = name)
+            }
 
-                        HomeBannerRow(
-                            bannerImages = HomeSampleData.bannerImages
-                        )
+            composable<MainRoute.Favorite> {
+                PlaceholderTabScreen(title = "찜")
+            }
 
-                        Spacer(
-                            modifier = Modifier.height(20.dp)
-                        )
-
-                        Text(
-                            text = "${name}님을 위한 추천 아이템",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            color = SoptTheme.colors.textPrimary,
-                            style = SoptTheme.typography.m18,
-                            maxLines = 1
-                        )
-
-                        Spacer(
-                            modifier = Modifier.height(12.dp)
-                        )
-
-                        HomeCategoryRow(
-                            categories = HomeSampleData.categories,
-                            selectedCategory = selectedCategory,
-                            onCategorySelected = { category ->
-                                selectedCategory = category
-                            }
-                        )
-
-                        Spacer(
-                            modifier = Modifier.height(20.dp)
-                        )
-                    }
-                }
-
-                items(
-                    items = HomeSampleData.products,
-                    key = { product -> product.id }
-                ) { product ->
-                    HomeProductCard(
-                        product = product
-                    )
-                }
-
-                item(
-                    key = "bottom_padding",
-                    span = { GridItemSpan(maxLineSpan) }
-                ) {
-                    Spacer(
-                        modifier = Modifier.height(96.dp)
-                    )
-                }
+            composable<MainRoute.MyPage> {
+                PlaceholderTabScreen(title = "마이페이지")
             }
         }
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
 @Composable
-private fun MainScreenPreview() {
-    SoptTheme {
-        MainScreen(
-            name = HomeSampleData.userName
+private fun PlaceholderTabScreen(title: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(
+                WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
+                ),
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = title,
+            color = SoptTheme.colors.textPrimary,
+            style = SoptTheme.typography.m18,
         )
     }
 }
