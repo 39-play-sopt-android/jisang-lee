@@ -3,11 +3,9 @@ package org.sopt.play.main.presentation.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -27,36 +25,29 @@ fun HomeBannerRow(
 ) {
     val listState = rememberLazyListState()
 
-    BoxWithConstraints(
+    LazyRow(
         modifier = modifier
             .fillMaxWidth()
-            .background(SoptTheme.colors.background)
+            .background(SoptTheme.colors.background),
+        state = listState,
+        contentPadding = PaddingValues(
+            horizontal = 16.dp,
+            vertical = 8.dp
+        ),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val bannerWidth = maxWidth - 32.dp
-
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth(),
-            state = listState,
-            contentPadding = PaddingValues(
-                horizontal = 16.dp,
-                vertical = 8.dp
-            ),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            itemsIndexed(
-                items = bannerImages,
-                key = { _, imageRes -> imageRes }
-            ) { index, imageRes ->
-                Image(
-                    painter = painterResource(id = imageRes),
-                    contentDescription = "프로모션 배너 ${index + 1}",
-                    modifier = Modifier
-                        .width(bannerWidth)
-                        .aspectRatio(328f / 195f),
-                    contentScale = ContentScale.Crop
-                )
-            }
+        itemsIndexed(
+            items = bannerImages,
+            key = { _, imageRes -> imageRes }
+        ) { index, imageRes ->
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = "프로모션 배너 ${index + 1}",
+                modifier = Modifier
+                    .fillParentMaxWidth()
+                    .aspectRatio(328f / 195f),
+                contentScale = ContentScale.Crop
+            )
         }
     }
 }

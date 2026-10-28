@@ -38,7 +38,6 @@ import org.sopt.play.main.presentation.component.HomeProductCard
 import org.sopt.play.main.presentation.component.HomeTopBar
 import org.sopt.play.ui.theme.SoptTheme
 
-
 @Composable
 fun MainScreen(
     name: String,
@@ -88,8 +87,7 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxSize(),
                 state = gridState,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item(
                     key = "home_header",

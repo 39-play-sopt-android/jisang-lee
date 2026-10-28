@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -69,25 +71,27 @@ fun HomeProductCard(
                 contentScale = ContentScale.Crop
             )
 
-            IconToggleButton(
-                checked = isFavorite,
-                onCheckedChange = { checked ->
-                    isFavorite = checked
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(48.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = favoriteIconRes),
-                    contentDescription = if (isFavorite) {
-                        "안좋아졌다"
-                    } else {
-                        "좋다"
+            CompositionLocalProvider(LocalRippleConfiguration provides null) {
+                IconToggleButton(
+                    checked = isFavorite,
+                    onCheckedChange = { checked ->
+                        isFavorite = checked
                     },
-                    modifier = Modifier.size(24.dp),
-                    tint = SoptTheme.colors.textPrimary
-                )
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .size(40.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = favoriteIconRes),
+                        contentDescription = if (isFavorite) {
+                            "안좋아졌다"
+                        } else {
+                            "좋다"
+                        },
+                        modifier = Modifier.size(24.dp),
+                        tint = if (isFavorite) SoptPalette.Red else SoptPalette.White
+                    )
+                }
             }
         }
 
