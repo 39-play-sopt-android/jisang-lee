@@ -26,6 +26,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.sopt.play.navigation.MainTab
+import org.sopt.play.ui.preview.ComponentPreviews
 import org.sopt.play.ui.theme.SoptPalette
 import org.sopt.play.ui.theme.SoptTheme
 
@@ -88,6 +89,21 @@ fun MainBottomBar(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+            }
+        }
+    }
+}
+
+@ComponentPreviews
+@Composable
+private fun MainBottomBarPreview() {
+    SoptTheme {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            MainTab.entries.forEach { selectedTab ->
+                MainBottomBar(
+                    selectedTab = selectedTab,
+                    onTabSelected = {}
+                )
             }
         }
     }

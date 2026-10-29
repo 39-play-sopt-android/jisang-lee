@@ -14,9 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.play.R
+import org.sopt.play.ui.preview.ComponentPreviews
 import org.sopt.play.ui.theme.SoptTheme
 
 @Composable
@@ -55,7 +55,7 @@ fun HomeTopBar(
     }
 }
 
-@Preview(showBackground = true, widthDp = 360)
+@ComponentPreviews
 @Composable
 private fun HomeTopBarPreview() {
     SoptTheme {

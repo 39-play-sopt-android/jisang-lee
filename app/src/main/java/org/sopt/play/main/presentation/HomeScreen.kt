@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -36,12 +37,14 @@ import org.sopt.play.main.presentation.component.HomeCategoryRow
 import org.sopt.play.main.presentation.component.HomeMenuRow
 import org.sopt.play.main.presentation.component.HomeProductCard
 import org.sopt.play.main.presentation.component.HomeTopBar
+import org.sopt.play.ui.preview.ScreenPreviews
 import org.sopt.play.ui.theme.SoptTheme
 
 @Composable
 fun HomeScreen(
     name: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    gridState: LazyGridState = rememberLazyGridState()
 ) {
     var selectedMenu by rememberSaveable {
         mutableStateOf("홈")
@@ -50,8 +53,6 @@ fun HomeScreen(
     var selectedCategory by rememberSaveable {
         mutableStateOf("전체")
     }
-
-    val gridState = rememberLazyGridState()
 
     Scaffold(
         modifier = modifier
@@ -163,15 +164,38 @@ fun HomeScreen(
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
+@ScreenPreviews
 @Composable
 private fun HomeScreenPreview() {
     SoptTheme {
         HomeScreen(
             name = HomeSampleData.userName
         )
+    }
+}
+
+@ScreenPreviews
+@Composable
+private fun HomeProductsPreview() {
+    SoptTheme {
+        HomeScreen(
+            name = HomeSampleData.userName,
+            gridState = rememberLazyGridState(initialFirstVisibleItemIndex = 1)
+        )
+    }
+}
+
+@Preview(
+    name = "긴 이름, 글꼴 200%",
+    apiLevel = 36,
+    widthDp = 320,
+    heightDp = 640,
+    fontScale = 2f,
+    showBackground = true
+)
+@Composable
+private fun HomeScreenLongNamePreview() {
+    SoptTheme {
+        HomeScreen(name = "이지상의이름은이지상이다")
     }
 }

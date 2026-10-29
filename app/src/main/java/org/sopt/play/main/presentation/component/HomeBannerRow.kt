@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import org.sopt.play.main.presentation.HomeSampleData
 import org.sopt.play.ui.theme.SoptTheme
@@ -21,10 +24,9 @@ import org.sopt.play.ui.theme.SoptTheme
 @Composable
 fun HomeBannerRow(
     bannerImages: List<Int>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState()
 ) {
-    val listState = rememberLazyListState()
-
     LazyRow(
         modifier = modifier
             .fillMaxWidth()
@@ -52,12 +54,21 @@ fun HomeBannerRow(
     }
 }
 
-@Preview(showBackground = true)
+class HomeBannerPreviewParameterProvider : PreviewParameterProvider<Int> {
+    override val values = HomeSampleData.bannerImages.indices.asSequence()
+
+    override fun getDisplayName(index: Int): String = "배너 ${index + 1}"
+}
+
+@Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun HomeBannerRowPreview() {
+private fun HomeBannerRowPreview(
+    @PreviewParameter(HomeBannerPreviewParameterProvider::class) index: Int
+) {
     SoptTheme {
         HomeBannerRow(
-            bannerImages = HomeSampleData.bannerImages
+            bannerImages = HomeSampleData.bannerImages,
+            listState = rememberLazyListState(initialFirstVisibleItemIndex = index)
         )
     }
 }

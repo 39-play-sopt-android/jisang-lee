@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,17 +15,12 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.sopt.play.main.presentation.HomeSampleData
+import org.sopt.play.ui.preview.ComponentPreviews
 import org.sopt.play.ui.theme.SoptPalette
 import org.sopt.play.ui.theme.SoptTheme
 
@@ -81,16 +77,20 @@ fun HomeCategoryRow(
     }
 }
 
-@Preview(showBackground = true)
+@ComponentPreviews
 @Composable
 private fun HomeCategoryRowPreview() {
-    var selectedCategory by rememberSaveable { mutableStateOf("전체") }
+    val categories = listOf("전체", "길이가 긴 카테고리는 길이가 길다")
 
     SoptTheme {
-        HomeCategoryRow(
-            categories = HomeSampleData.categories,
-            selectedCategory = selectedCategory,
-            onCategorySelected = { selectedCategory = it }
-        )
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            categories.forEach { selectedCategory ->
+                HomeCategoryRow(
+                    categories = categories,
+                    selectedCategory = selectedCategory,
+                    onCategorySelected = {}
+                )
+            }
+        }
     }
 }

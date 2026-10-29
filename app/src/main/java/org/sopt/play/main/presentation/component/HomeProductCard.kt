@@ -1,7 +1,8 @@
 package org.sopt.play.main.presentation.component
 
-import androidx.compose.foundation.Image
+import  androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,11 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import org.sopt.play.R
 import org.sopt.play.main.presentation.HomeSampleData
 import org.sopt.play.main.presentation.model.HomeProduct
+import org.sopt.play.ui.preview.ComponentPreviews
 import org.sopt.play.ui.theme.SoptPalette
 import org.sopt.play.ui.theme.SoptTheme
 import java.text.NumberFormat
@@ -137,6 +140,9 @@ fun HomeProductCard(
 
                 Text(
                     text = formattedPrice,
+                    modifier = Modifier
+                        .weight(1f)
+                        .basicMarquee(iterations = Int.MAX_VALUE),
                     color = SoptTheme.colors.textPrimary,
                     style = SoptTheme.typography.m14,
                     maxLines = 1
@@ -146,17 +152,49 @@ fun HomeProductCard(
     }
 }
 
-@Preview(showBackground = true)
+class HomeProductPreviewParameterProvider : PreviewParameterProvider<HomeProduct> {
+    private val baseProduct = HomeSampleData.products.first()
+    private val longStoreName = "이름이 아주 긴 스토어 트랜디어패럴"
+    private val cases = listOf(
+        "짧은 상점명, 짧은 상품명" to baseProduct.copy(
+            storeName = "어텀",
+            productName = "보울 티셔츠",
+            discountPercent = 0
+        ),
+        "짧은 상점명, 긴 상품명" to baseProduct.copy(
+            storeName = "어텀"
+        ),
+        "긴 상점명, 짧은 상품명" to baseProduct.copy(
+            storeName = longStoreName,
+            productName = "보울 티셔츠"
+        ),
+        "긴 상점명, 긴 상품명, 긴 가격" to baseProduct.copy(
+            storeName = longStoreName,
+            price = 1_234_567_890
+        )
+    )
+
+    override val values = cases.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String = cases[index].first
+}
+
+@ComponentPreviews
 @Composable
-private fun HomeProductCardPreview() {
+private fun HomeProductCardPreview(
+    @PreviewParameter(HomeProductPreviewParameterProvider::class) product: HomeProduct
+) {
     SoptTheme {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            HomeSampleData.products.take(2).forEach { product ->
+            listOf(false, true).forEach { isFavorite ->
                 HomeProductCard(
-                    product = product,
+                    product = product.copy(
+                        id = "${product.id}_$isFavorite",
+                        isFavorite = isFavorite
+                    ),
                     modifier = Modifier.weight(1f)
                 )
             }
