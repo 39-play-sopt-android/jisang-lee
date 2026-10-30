@@ -1,6 +1,6 @@
 package org.sopt.play.main.presentation.component
 
-import  androidx.compose.foundation.Image
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +17,6 @@ import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -41,13 +37,10 @@ import java.util.Locale
 @Composable
 fun HomeProductCard(
     product: HomeProduct,
+    onFavoriteChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isFavorite by rememberSaveable(product.id) {
-        mutableStateOf(product.isFavorite)
-    }
-
-    val favoriteIconRes = if (isFavorite) {
+    val favoriteIconRes = if (product.isFavorite) {
         R.drawable.ic_favorite_filled
     } else {
         R.drawable.ic_favorite_outline
@@ -76,23 +69,21 @@ fun HomeProductCard(
 
             CompositionLocalProvider(LocalRippleConfiguration provides null) {
                 IconToggleButton(
-                    checked = isFavorite,
-                    onCheckedChange = { checked ->
-                        isFavorite = checked
-                    },
+                    checked = product.isFavorite,
+                    onCheckedChange = onFavoriteChanged,
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .size(40.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = favoriteIconRes),
-                        contentDescription = if (isFavorite) {
+                        contentDescription = if (product.isFavorite) {
                             "안좋아졌다"
                         } else {
                             "좋다"
                         },
                         modifier = Modifier.size(24.dp),
-                        tint = if (isFavorite) SoptPalette.Red else SoptPalette.White
+                        tint = if (product.isFavorite) SoptPalette.Red else SoptPalette.White
                     )
                 }
             }
@@ -195,6 +186,7 @@ private fun HomeProductCardPreview(
                         id = "${product.id}_$isFavorite",
                         isFavorite = isFavorite
                     ),
+                    onFavoriteChanged = {},
                     modifier = Modifier.weight(1f)
                 )
             }

@@ -1,5 +1,5 @@
 package org.sopt.play.auth.presentation
-import android.util.Patterns
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,32 +32,13 @@ import org.sopt.play.ui.theme.SoptTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onLogin: (String, String) -> Unit,
+    uiState: LoginUiState,
+    email: TextFieldState,
+    password: TextFieldState,
+    onLogin: () -> Unit,
     onSignUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val email = rememberTextFieldState()
-    val password = rememberTextFieldState()
-
-    val emailText = email.text.toString().trim()
-    val passwordText = password.text.toString()
-
-    val isEmailValid = Patterns.EMAIL_ADDRESS
-        .matcher(emailText)
-        .matches()
-
-    val emailError = when {
-        emailText.isEmpty() || isEmailValid -> null
-        else -> "올바른 이메일을 입력해주세요."
-    }
-
-    val passwordError = when {
-        passwordText.isEmpty() || passwordText.length >= 6 -> null
-        else -> "비밀번호는 6자 이상 입력해주세요."
-    }
-
-    val canLogin = isEmailValid && passwordText.length >= 6
-
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
@@ -89,12 +71,12 @@ fun LoginScreen(
                 ) {
                     EmailAuthTextField(
                         state = email,
-                        errorText = emailError
+                        errorText = uiState.emailError
                     )
 
                     PasswordAuthTextField(
                         state = password,
-                        errorText = passwordError
+                        errorText = uiState.passwordError
                     )
                 }
 
@@ -102,10 +84,8 @@ fun LoginScreen(
 
                 SoptPrimaryButton(
                     text = "로그인",
-                    enabled = canLogin,
-                    onClick = {
-                        onLogin(emailText, passwordText)
-                    }
+                    enabled = uiState.canLogin,
+                    onClick = onLogin
                 )
 
                 Spacer(Modifier.height(20.dp))
@@ -153,7 +133,10 @@ private fun SignUpPrompt(
 private fun LoginScreenPreview() {
     SoptTheme {
         LoginScreen(
-            onLogin = { _, _ -> },
+            uiState = LoginUiState(),
+            email = rememberTextFieldState(),
+            password = rememberTextFieldState(),
+            onLogin = {},
             onSignUp = { }
         )
     }

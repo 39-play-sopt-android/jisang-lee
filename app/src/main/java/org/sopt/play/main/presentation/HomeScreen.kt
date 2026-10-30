@@ -25,10 +25,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,17 +39,13 @@ import org.sopt.play.ui.theme.SoptTheme
 @Composable
 fun HomeScreen(
     name: String,
+    uiState: HomeUiState,
+    onMenuSelected: (String) -> Unit,
+    onCategorySelected: (String) -> Unit,
+    onFavoriteChanged: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     gridState: LazyGridState = rememberLazyGridState()
 ) {
-    var selectedMenu by rememberSaveable {
-        mutableStateOf("홈")
-    }
-
-    var selectedCategory by rememberSaveable {
-        mutableStateOf("전체")
-    }
-
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
@@ -100,10 +92,8 @@ fun HomeScreen(
                     ) {
                         HomeMenuRow(
                             menus = HomeSampleData.menus,
-                            selectedMenu = selectedMenu,
-                            onMenuSelected = { menu ->
-                                selectedMenu = menu
-                            }
+                            selectedMenu = uiState.selectedMenu,
+                            onMenuSelected = onMenuSelected
                         )
 
                         HomeBannerRow(
@@ -130,10 +120,8 @@ fun HomeScreen(
 
                         HomeCategoryRow(
                             categories = HomeSampleData.categories,
-                            selectedCategory = selectedCategory,
-                            onCategorySelected = { category ->
-                                selectedCategory = category
-                            }
+                            selectedCategory = uiState.selectedCategory,
+                            onCategorySelected = onCategorySelected
                         )
 
                         Spacer(
@@ -143,11 +131,14 @@ fun HomeScreen(
                 }
 
                 items(
-                    items = HomeSampleData.products,
+                    items = uiState.products,
                     key = { product -> product.id }
                 ) { product ->
                     HomeProductCard(
-                        product = product
+                        product = product,
+                        onFavoriteChanged = { checked ->
+                            onFavoriteChanged(product.id, checked)
+                        }
                     )
                 }
 
@@ -169,7 +160,11 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
     SoptTheme {
         HomeScreen(
-            name = HomeSampleData.userName
+            name = HomeSampleData.userName,
+            uiState = HomeUiState(),
+            onMenuSelected = {},
+            onCategorySelected = {},
+            onFavoriteChanged = { _, _ -> }
         )
     }
 }
@@ -180,6 +175,10 @@ private fun HomeProductsPreview() {
     SoptTheme {
         HomeScreen(
             name = HomeSampleData.userName,
+            uiState = HomeUiState(),
+            onMenuSelected = {},
+            onCategorySelected = {},
+            onFavoriteChanged = { _, _ -> },
             gridState = rememberLazyGridState(initialFirstVisibleItemIndex = 1)
         )
     }
@@ -196,6 +195,12 @@ private fun HomeProductsPreview() {
 @Composable
 private fun HomeScreenLongNamePreview() {
     SoptTheme {
-        HomeScreen(name = "이지상의이름은이지상이다")
+        HomeScreen(
+            name = "이지상의이름은이지상이다",
+            uiState = HomeUiState(),
+            onMenuSelected = {},
+            onCategorySelected = {},
+            onFavoriteChanged = { _, _ -> }
+        )
     }
 }

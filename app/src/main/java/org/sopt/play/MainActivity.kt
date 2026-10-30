@@ -11,9 +11,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val app = application as SoptApplication
         setContent {
             SoptTheme {
-                AppNavHost()
+                AppNavHost(
+                    authRepository = app.authRepository
+                )
             }
         }
     }
