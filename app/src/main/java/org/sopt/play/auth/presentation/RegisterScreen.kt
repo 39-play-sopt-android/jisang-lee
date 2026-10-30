@@ -1,6 +1,5 @@
 package org.sopt.play.auth.presentation
 
-import android.util.Patterns
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,44 +30,14 @@ import org.sopt.play.ui.theme.SoptTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-    onRegister: (name: String, email: String, password: String) -> Unit,
+    uiState: RegisterUiState,
+    name: TextFieldState,
+    email: TextFieldState,
+    password: TextFieldState,
+    passwordConfirm: TextFieldState,
+    onRegister: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val name = rememberTextFieldState()
-    val email = rememberTextFieldState()
-    val password = rememberTextFieldState()
-    val passwordConfirm = rememberTextFieldState()
-
-    val nameText = name.text.toString().trim()
-    val emailText = email.text.toString().trim()
-    val passwordText = password.text.toString()
-    val confirmText = passwordConfirm.text.toString()
-
-    val isEmailValid = Patterns.EMAIL_ADDRESS
-        .matcher(emailText)
-        .matches()
-
-    val emailError = when {
-        emailText.isEmpty() || isEmailValid -> null
-        else -> "올바른 이메일을 입력해주세요."
-    }
-
-    val passwordError = when {
-        passwordText.isEmpty() || passwordText.length >= 6 -> null
-        else -> "비밀번호는 6자 이상 입력해주세요."
-    }
-
-    val confirmError = when {
-        confirmText.isEmpty() || confirmText == passwordText -> null
-        else -> "비밀번호가 일치하지 않아요."
-    }
-
-    val canRegister =
-        nameText.isNotEmpty() &&
-                isEmailValid &&
-                passwordText.length >= 6 &&
-                confirmText == passwordText
-
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = SoptTheme.colors.background
@@ -103,19 +73,19 @@ fun RegisterScreen(
 
                     EmailAuthTextField(
                         state = email,
-                        errorText = emailError
+                        errorText = uiState.emailError
                     )
 
                     PasswordAuthTextField(
                         state = password,
-                        errorText = passwordError,
+                        errorText = uiState.passwordError,
                         imeAction = ImeAction.Next
                     )
 
                     PasswordAuthTextField(
                         state = passwordConfirm,
                         title = "비밀번호 확인",
-                        errorText = confirmError,
+                        errorText = uiState.confirmError,
                         imeAction = ImeAction.Done
                     )
                 }
@@ -124,10 +94,8 @@ fun RegisterScreen(
 
                 SoptPrimaryButton(
                     text = "회원가입",
-                    enabled = canRegister,
-                    onClick = {
-                        onRegister(nameText, emailText, passwordText)
-                    },
+                    enabled = uiState.canRegister,
+                    onClick = onRegister,
                 )
             }
         }
@@ -138,6 +106,13 @@ fun RegisterScreen(
 @Composable
 private fun RegisterScreenPreview() {
     SoptTheme {
-        RegisterScreen(onRegister = { _, _, _ -> })
+        RegisterScreen(
+            uiState = RegisterUiState(),
+            name = rememberTextFieldState(),
+            email = rememberTextFieldState(),
+            password = rememberTextFieldState(),
+            passwordConfirm = rememberTextFieldState(),
+            onRegister = {}
+        )
     }
 }

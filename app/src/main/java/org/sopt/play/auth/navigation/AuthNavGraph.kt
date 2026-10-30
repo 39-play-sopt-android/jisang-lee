@@ -4,20 +4,22 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import org.sopt.play.auth.presentation.LoginScreen
-import org.sopt.play.auth.presentation.RegisterScreen
+import org.sopt.play.auth.data.AuthRepository
+import org.sopt.play.auth.presentation.LoginRoute
+import org.sopt.play.auth.presentation.RegisterRoute
 import org.sopt.play.navigation.AppRoute
 
 fun NavGraphBuilder.authNavGraph(
     navController: NavHostController,
-    onLogin: (String, String) -> Unit,
-    onRegister: (String, String, String) -> Unit
+    repository: AuthRepository,
+    onLogin: () -> Unit
 ) {
     navigation<AppRoute.Auth>(
         startDestination = AppRoute.Login
     ) {
         composable<AppRoute.Login> {
-            LoginScreen(
+            LoginRoute(
+                repository = repository,
                 onLogin = onLogin,
                 onSignUp = {
                     navController.navigate(AppRoute.Register) {
@@ -28,8 +30,13 @@ fun NavGraphBuilder.authNavGraph(
         }
 
         composable<AppRoute.Register> {
-            RegisterScreen(
-                onRegister = onRegister
+            RegisterRoute(
+                repository = repository,
+                onRegister = {
+                    navController.popBackStack<AppRoute.Login>(
+                        inclusive = false
+                    )
+                }
             )
         }
     }

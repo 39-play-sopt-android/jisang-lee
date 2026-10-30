@@ -38,6 +38,10 @@ import org.sopt.play.ui.theme.SoptTheme
 @Composable
 fun MainScreen(
     name: String,
+    homeUiState: HomeUiState,
+    onMenuSelected: (String) -> Unit,
+    onCategorySelected: (String) -> Unit,
+    onFavoriteChanged: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     startDestination: MainRoute = MainRoute.Home
 ) {
@@ -87,7 +91,13 @@ fun MainScreen(
             predictivePopExitTransition = { ExitTransition.None }
         ) {
             composable<MainRoute.Home> {
-                HomeScreen(name = name)
+                HomeScreen(
+                    name = name,
+                    uiState = homeUiState,
+                    onMenuSelected = onMenuSelected,
+                    onCategorySelected = onCategorySelected,
+                    onFavoriteChanged = onFavoriteChanged
+                )
             }
 
             composable<MainRoute.Favorite> {
@@ -138,6 +148,10 @@ private fun MainScreenPreview(
         CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides dispatcherOwner) {
             MainScreen(
                 name = HomeSampleData.userName,
+                homeUiState = HomeUiState(),
+                onMenuSelected = {},
+                onCategorySelected = {},
+                onFavoriteChanged = { _, _ -> },
                 startDestination = tab.route
             )
         }
