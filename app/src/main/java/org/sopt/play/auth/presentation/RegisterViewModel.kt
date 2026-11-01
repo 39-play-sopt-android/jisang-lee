@@ -26,33 +26,55 @@ class RegisterViewModel(
     init {
         viewModelScope.launch {
             snapshotFlow {
-                listOf(
-                    name.text.toString(),
-                    email.text.toString(),
-                    password.text.toString(),
-                    passwordConfirm.text.toString()
+                RegisterIntent.InputChanged(
+                    name = name.text.toString(),
+                    email = email.text.toString(),
+                    password = password.text.toString(),
+                    passwordConfirm = passwordConfirm.text.toString()
                 )
-            }.collect { (nameText, emailText, passwordText, confirmText) ->
-                savedStateHandle["name"] = nameText
-                savedStateHandle["email"] = emailText
-                _uiState.update { state ->
-                    state.copy(
-                        emailError = AuthValidator.emailError(emailText),
-                        passwordError = AuthValidator.passwordError(passwordText),
-                        confirmError = AuthValidator.confirmError(passwordText, confirmText),
-                        canRegister = AuthValidator.canRegister(
-                            name = nameText,
-                            email = emailText,
-                            password = passwordText,
-                            passwordConfirm = confirmText
-                        )
-                    )
-                }
+            }.collect { intent ->
+                onIntent(intent)
             }
         }
     }
 
-    fun onRegister() {
+    fun onIntent(intent: RegisterIntent) {
+        when (intent) {
+            is RegisterIntent.InputChanged -> onInputChanged(
+                nameText = intent.name,
+                emailText = intent.email,
+                passwordText = intent.password,
+                confirmText = intent.passwordConfirm
+            )
+            RegisterIntent.RegisterClicked -> onRegister()
+            RegisterIntent.RegisterHandled -> onRegisterHandled()
+        }
+    }
+
+    private fun onInputChanged(
+        nameText: String,
+        emailText: String,
+        passwordText: String,
+        confirmText: String
+    ) {
+        savedStateHandle["name"] = nameText
+        savedStateHandle["email"] = emailText
+        _uiState.update { state ->
+            state.copy(
+                emailError = AuthValidator.emailError(emailText),
+                passwordError = AuthValidator.passwordError(passwordText),
+                confirmError = AuthValidator.confirmError(passwordText, confirmText),
+                canRegister = AuthValidator.canRegister(
+                    name = nameText,
+                    email = emailText,
+                    password = passwordText,
+                    passwordConfirm = confirmText
+                )
+            )
+        }
+    }
+
+    private fun onRegister() {
         if (_uiState.value.isRegistered) {
             return
         }
@@ -81,7 +103,7 @@ class RegisterViewModel(
         }
     }
 
-    fun onRegisterHandled() {
+    private fun onRegisterHandled() {
         _uiState.update { state ->
             state.copy(isRegistered = false)
         }

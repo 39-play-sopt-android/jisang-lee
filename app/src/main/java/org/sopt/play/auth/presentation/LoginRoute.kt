@@ -42,12 +42,12 @@ fun LoginRoute(
             viewModel.uiState.collect { state ->
                 if (state.isLoggedIn) {
                     currentOnLogin()
-                    viewModel.onLoginHandled()
+                    viewModel.onIntent(LoginIntent.LoginHandled)
                 }
 
                 state.errorMessage?.let { message ->
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                    viewModel.onErrorMessageShown()
+                    viewModel.onIntent(LoginIntent.ErrorMessageShown)
                 }
             }
         }
@@ -57,7 +57,7 @@ fun LoginRoute(
         uiState = uiState,
         email = viewModel.email,
         password = viewModel.password,
-        onLogin = { viewModel.onLogin() },
+        onLogin = { viewModel.onIntent(LoginIntent.LoginClicked) },
         onSignUp = onSignUp
     )
 }

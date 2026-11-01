@@ -38,7 +38,7 @@ fun RegisterRoute(
             viewModel.uiState.collect { state ->
                 if (state.isRegistered) {
                     currentOnRegister()
-                    viewModel.onRegisterHandled()
+                    viewModel.onIntent(RegisterIntent.RegisterHandled)
                 }
             }
         }
@@ -50,6 +50,6 @@ fun RegisterRoute(
         email = viewModel.email,
         password = viewModel.password,
         passwordConfirm = viewModel.passwordConfirm,
-        onRegister = { viewModel.onRegister() }
+        onRegister = { viewModel.onIntent(RegisterIntent.RegisterClicked) }
     )
 }

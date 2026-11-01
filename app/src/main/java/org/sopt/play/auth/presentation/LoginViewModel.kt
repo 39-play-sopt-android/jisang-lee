@@ -24,21 +24,37 @@ class LoginViewModel(
     init {
         viewModelScope.launch {
             snapshotFlow {
-                email.text.toString() to password.text.toString()
-            }.collect { (emailText, passwordText) ->
-                savedStateHandle["email"] = emailText
-                _uiState.update { state ->
-                    state.copy(
-                        emailError = AuthValidator.emailError(emailText),
-                        passwordError = AuthValidator.passwordError(passwordText),
-                        canLogin = AuthValidator.canLogin(emailText, passwordText)
-                    )
-                }
+                LoginIntent.InputChanged(
+                    email = email.text.toString(),
+                    password = password.text.toString()
+                )
+            }.collect { intent ->
+                onIntent(intent)
             }
         }
     }
 
-    fun onLogin() {
+    fun onIntent(intent: LoginIntent) {
+        when (intent) {
+            is LoginIntent.InputChanged -> onInputChanged(intent.email, intent.password)
+            LoginIntent.LoginClicked -> onLogin()
+            LoginIntent.ErrorMessageShown -> onErrorMessageShown()
+            LoginIntent.LoginHandled -> onLoginHandled()
+        }
+    }
+
+    private fun onInputChanged(emailText: String, passwordText: String) {
+        savedStateHandle["email"] = emailText
+        _uiState.update { state ->
+            state.copy(
+                emailError = AuthValidator.emailError(emailText),
+                passwordError = AuthValidator.passwordError(passwordText),
+                canLogin = AuthValidator.canLogin(emailText, passwordText)
+            )
+        }
+    }
+
+    private fun onLogin() {
         if (_uiState.value.isLoggedIn) {
             return
         }
@@ -58,13 +74,13 @@ class LoginViewModel(
         }
     }
 
-    fun onErrorMessageShown() {
+    private fun onErrorMessageShown() {
         _uiState.update { state ->
             state.copy(errorMessage = null)
         }
     }
 
-    fun onLoginHandled() {
+    private fun onLoginHandled() {
         _uiState.update { state ->
             state.copy(isLoggedIn = false)
         }

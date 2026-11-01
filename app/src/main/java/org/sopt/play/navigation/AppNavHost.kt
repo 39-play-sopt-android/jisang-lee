@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.sopt.play.auth.data.AuthRepository
 import org.sopt.play.auth.navigation.authNavGraph
+import org.sopt.play.main.presentation.HomeIntent
 import org.sopt.play.main.presentation.HomeViewModel
 import org.sopt.play.main.presentation.MainScreen
 
@@ -69,13 +70,13 @@ fun AppNavHost(
                     name = currentUser.name,
                     homeUiState = homeUiState,
                     onMenuSelected = { menu ->
-                        homeViewModel.onMenuSelected(menu)
+                        homeViewModel.onIntent(HomeIntent.MenuSelected(menu))
                     },
                     onCategorySelected = { category ->
-                        homeViewModel.onCategorySelected(category)
+                        homeViewModel.onIntent(HomeIntent.CategorySelected(category))
                     },
                     onFavoriteChanged = { productId, isFavorite ->
-                        homeViewModel.onFavoriteChanged(productId, isFavorite)
+                        homeViewModel.onIntent(HomeIntent.FavoriteChanged(productId, isFavorite))
                     }
                 )
             }

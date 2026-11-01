@@ -17,21 +17,29 @@ class HomeViewModel(
     )
     val uiState = _uiState.asStateFlow()
 
-    fun onMenuSelected(menu: String) {
+    fun onIntent(intent: HomeIntent) {
+        when (intent) {
+            is HomeIntent.MenuSelected -> onMenuSelected(intent.menu)
+            is HomeIntent.CategorySelected -> onCategorySelected(intent.category)
+            is HomeIntent.FavoriteChanged -> onFavoriteChanged(intent.productId, intent.isFavorite)
+        }
+    }
+
+    private fun onMenuSelected(menu: String) {
         savedStateHandle["selectedMenu"] = menu
         _uiState.update { state ->
             state.copy(selectedMenu = menu)
         }
     }
 
-    fun onCategorySelected(category: String) {
+    private fun onCategorySelected(category: String) {
         savedStateHandle["selectedCategory"] = category
         _uiState.update { state ->
             state.copy(selectedCategory = category)
         }
     }
 
-    fun onFavoriteChanged(productId: String, isFavorite: Boolean) {
+    private fun onFavoriteChanged(productId: String, isFavorite: Boolean) {
         _uiState.update { state ->
             state.copy(
                 products = state.products.map { product ->
