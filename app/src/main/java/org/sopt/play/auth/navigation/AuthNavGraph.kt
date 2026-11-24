@@ -5,8 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import org.sopt.play.auth.data.AuthRepository
-import org.sopt.play.auth.presentation.LoginRoute
-import org.sopt.play.auth.presentation.RegisterRoute
+import org.sopt.play.auth.presentation.login.LoginRoute
+import org.sopt.play.auth.presentation.register.RegisterRoute
 import org.sopt.play.navigation.AppRoute
 
 fun NavGraphBuilder.authNavGraph(

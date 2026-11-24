@@ -1,4 +1,4 @@
-package org.sopt.play.auth.presentation
+package org.sopt.play.auth.presentation.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

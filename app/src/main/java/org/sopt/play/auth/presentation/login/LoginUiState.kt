@@ -1,4 +1,4 @@
-package org.sopt.play.auth.presentation
+package org.sopt.play.auth.presentation.login
 
 data class LoginUiState(
     val emailError: String? = null,

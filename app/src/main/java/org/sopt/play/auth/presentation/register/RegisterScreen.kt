@@ -1,4 +1,4 @@
-package org.sopt.play.auth.presentation
+package org.sopt.play.auth.presentation.register
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

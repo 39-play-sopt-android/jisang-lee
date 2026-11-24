@@ -1,4 +1,4 @@
-package org.sopt.play.auth.presentation
+package org.sopt.play.auth.presentation.login
 
 sealed interface LoginIntent {
     data class InputChanged(val email: String, val password: String) : LoginIntent

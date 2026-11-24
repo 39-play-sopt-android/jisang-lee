@@ -1,11 +1,9 @@
-package org.sopt.play.auth.presentation
+package org.sopt.play.auth.presentation.register
 
-import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -17,15 +15,14 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import org.sopt.play.auth.data.AuthRepository
 
 @Composable
-fun LoginRoute(
+fun RegisterRoute(
     repository: AuthRepository,
-    onLogin: () -> Unit,
-    onSignUp: () -> Unit
+    onRegister: () -> Unit
 ) {
-    val viewModel: LoginViewModel = viewModel(
+    val viewModel: RegisterViewModel = viewModel(
         factory = viewModelFactory {
             initializer {
-                LoginViewModel(
+                RegisterViewModel(
                     repository = repository,
                     savedStateHandle = createSavedStateHandle()
                 )
@@ -33,31 +30,26 @@ fun LoginRoute(
         }
     )
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val currentOnLogin by rememberUpdatedState(onLogin)
+    val currentOnRegister by rememberUpdatedState(onRegister)
 
-    LaunchedEffect(viewModel, lifecycleOwner, context) {
+    LaunchedEffect(viewModel, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiState.collect { state ->
-                if (state.isLoggedIn) {
-                    currentOnLogin()
-                    viewModel.onIntent(LoginIntent.LoginHandled)
-                }
-
-                state.errorMessage?.let { message ->
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                    viewModel.onIntent(LoginIntent.ErrorMessageShown)
+                if (state.isRegistered) {
+                    currentOnRegister()
+                    viewModel.onIntent(RegisterIntent.RegisterHandled)
                 }
             }
         }
     }
 
-    LoginScreen(
+    RegisterScreen(
         uiState = uiState,
+        name = viewModel.name,
         email = viewModel.email,
         password = viewModel.password,
-        onLogin = { viewModel.onIntent(LoginIntent.LoginClicked) },
-        onSignUp = onSignUp
+        passwordConfirm = viewModel.passwordConfirm,
+        onRegister = { viewModel.onIntent(RegisterIntent.RegisterClicked) }
     )
 }

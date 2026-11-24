@@ -1,4 +1,4 @@
-package org.sopt.play.auth.presentation
+package org.sopt.play.auth.presentation.register
 
 sealed interface RegisterIntent {
     data class InputChanged(
