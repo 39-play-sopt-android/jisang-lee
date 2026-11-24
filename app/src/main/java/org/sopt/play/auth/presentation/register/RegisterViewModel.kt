@@ -65,7 +65,7 @@ class RegisterViewModel(
                 emailError = AuthValidator.emailError(emailText),
                 passwordError = AuthValidator.passwordError(passwordText),
                 confirmError = AuthValidator.confirmError(passwordText, confirmText),
-                canRegister = AuthValidator.canRegister(
+                isRegisterEnabled = AuthValidator.isRegisterEnabled(
                     name = nameText,
                     email = emailText,
                     password = passwordText,
@@ -84,13 +84,13 @@ class RegisterViewModel(
         val emailText = email.text.toString()
         val passwordText = password.text.toString()
         val confirmText = passwordConfirm.text.toString()
-        val canRegister = AuthValidator.canRegister(
+        val isRegisterEnabled = AuthValidator.isRegisterEnabled(
             name = nameText,
             email = emailText,
             password = passwordText,
             passwordConfirm = confirmText
         )
-        if (!canRegister) {
+        if (!isRegisterEnabled) {
             return
         }
 

@@ -84,7 +84,7 @@ fun LoginScreen(
 
                 SoptPrimaryButton(
                     text = "로그인",
-                    enabled = uiState.canLogin,
+                    enabled = uiState.isLoginEnabled,
                     onClick = onLogin
                 )
 

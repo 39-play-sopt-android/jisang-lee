@@ -50,7 +50,7 @@ class LoginViewModel(
             state.copy(
                 emailError = AuthValidator.emailError(emailText),
                 passwordError = AuthValidator.passwordError(passwordText),
-                canLogin = AuthValidator.canLogin(emailText, passwordText)
+                isLoginEnabled = AuthValidator.isLoginEnabled(emailText, passwordText)
             )
         }
     }
@@ -62,7 +62,7 @@ class LoginViewModel(
 
         val emailText = email.text.toString()
         val passwordText = password.text.toString()
-        if (!AuthValidator.canLogin(emailText, passwordText)) {
+        if (!AuthValidator.isLoginEnabled(emailText, passwordText)) {
             return
         }
 

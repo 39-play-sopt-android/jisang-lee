@@ -94,7 +94,7 @@ fun RegisterScreen(
 
                 SoptPrimaryButton(
                     text = "회원가입",
-                    enabled = uiState.canRegister,
+                    enabled = uiState.isRegisterEnabled,
                     onClick = onRegister,
                 )
             }

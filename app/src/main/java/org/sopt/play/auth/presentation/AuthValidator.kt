@@ -26,18 +26,18 @@ object AuthValidator {
         }
     }
 
-    fun canLogin(email: String, password: String): Boolean {
+    fun isLoginEnabled(email: String, password: String): Boolean {
         return isEmailValid(email) && isPasswordValid(password)
     }
 
-    fun canRegister(
+    fun isRegisterEnabled(
         name: String,
         email: String,
         password: String,
         passwordConfirm: String
     ): Boolean {
         return name.isNotBlank() &&
-                canLogin(email, password) &&
+                isLoginEnabled(email, password) &&
                 password == passwordConfirm
     }
 
