@@ -161,7 +161,7 @@ private fun HomeScreenPreview() {
     SoptTheme {
         HomeScreen(
             name = HomeSampleData.userName,
-            uiState = HomeUiState(),
+            uiState = HomeUiState(products = HomeSampleData.products),
             onMenuSelected = {},
             onCategorySelected = {},
             onFavoriteChanged = { _, _ -> }
@@ -175,7 +175,7 @@ private fun HomeProductsPreview() {
     SoptTheme {
         HomeScreen(
             name = HomeSampleData.userName,
-            uiState = HomeUiState(),
+            uiState = HomeUiState(products = HomeSampleData.products),
             onMenuSelected = {},
             onCategorySelected = {},
             onFavoriteChanged = { _, _ -> },
@@ -197,7 +197,7 @@ private fun HomeScreenLongNamePreview() {
     SoptTheme {
         HomeScreen(
             name = "이지상의이름은이지상이다",
-            uiState = HomeUiState(),
+            uiState = HomeUiState(products = HomeSampleData.products),
             onMenuSelected = {},
             onCategorySelected = {},
             onFavoriteChanged = { _, _ -> }

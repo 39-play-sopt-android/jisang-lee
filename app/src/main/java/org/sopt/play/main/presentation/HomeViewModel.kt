@@ -11,6 +11,7 @@ class HomeViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         HomeUiState(
+            products = HomeSampleData.products,
             selectedMenu = savedStateHandle["selectedMenu"] ?: "홈",
             selectedCategory = savedStateHandle["selectedCategory"] ?: "전체"
         )

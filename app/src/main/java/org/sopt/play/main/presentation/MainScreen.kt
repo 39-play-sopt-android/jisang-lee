@@ -148,7 +148,7 @@ private fun MainScreenPreview(
         CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides dispatcherOwner) {
             MainScreen(
                 name = HomeSampleData.userName,
-                homeUiState = HomeUiState(),
+                homeUiState = HomeUiState(products = HomeSampleData.products),
                 onMenuSelected = {},
                 onCategorySelected = {},
                 onFavoriteChanged = { _, _ -> },
