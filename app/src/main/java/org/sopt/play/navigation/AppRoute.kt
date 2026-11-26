@@ -14,4 +14,7 @@ sealed interface AppRoute {
 
     @Serializable
     data object Main : AppRoute
+
+    @Serializable
+    data object Post : AppRoute
 }

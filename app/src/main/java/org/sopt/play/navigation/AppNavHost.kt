@@ -17,6 +17,7 @@ import org.sopt.play.auth.navigation.authNavGraph
 import org.sopt.play.main.presentation.HomeIntent
 import org.sopt.play.main.presentation.HomeViewModel
 import org.sopt.play.main.presentation.MainScreen
+import org.sopt.play.post.presentation.PostScreen
 
 @Composable
 fun AppNavHost(
@@ -69,6 +70,11 @@ fun AppNavHost(
                 MainScreen(
                     name = currentUser.name,
                     homeUiState = homeUiState,
+                    onSearchClick = {
+                        navController.navigate(AppRoute.Post) {
+                            launchSingleTop = true
+                        }
+                    },
                     onMenuSelected = { menu ->
                         homeViewModel.onIntent(HomeIntent.MenuSelected(menu))
                     },
@@ -80,6 +86,10 @@ fun AppNavHost(
                     }
                 )
             }
+        }
+
+        composable<AppRoute.Post> {
+            PostScreen()
         }
     }
 }
