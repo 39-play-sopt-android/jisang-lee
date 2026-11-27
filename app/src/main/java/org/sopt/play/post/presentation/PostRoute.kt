@@ -47,18 +47,20 @@ fun PostRoute(
         }
     }
 
-    LaunchedEffect(uiState.isPostCreated) {
-        if (uiState.isPostCreated) {
+    LaunchedEffect(uiState.shouldScrollToTop) {
+        if (uiState.shouldScrollToTop) {
             listState.scrollToItem(index = 0)
-            viewModel.onIntent(PostIntent.PostCreatedHandled)
+            viewModel.onIntent(PostIntent.ScrollToTopHandled)
         }
     }
 
     PostScreen(
         uiState = uiState,
         listState = listState,
+        keyword = viewModel.keyword,
         title = viewModel.title,
         content = viewModel.content,
+        onSearch = { viewModel.onIntent(PostIntent.SearchClicked) },
         onFloatingButtonClick = { viewModel.onIntent(PostIntent.FloatingButtonClicked) },
         onSheetDismiss = { viewModel.onIntent(PostIntent.SheetDismissed) },
         onCreateClick = { viewModel.onIntent(PostIntent.CreateClicked) },

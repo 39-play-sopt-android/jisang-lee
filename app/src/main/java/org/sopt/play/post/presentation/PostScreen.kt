@@ -23,6 +23,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,8 +48,10 @@ import org.sopt.play.ui.theme.SoptTheme
 fun PostScreen(
     uiState: PostUiState,
     listState: LazyListState,
+    keyword: TextFieldState,
     title: TextFieldState,
     content: TextFieldState,
+    onSearch: () -> Unit,
     onFloatingButtonClick: () -> Unit,
     onSheetDismiss: () -> Unit,
     onCreateClick: () -> Unit,
@@ -74,6 +77,8 @@ fun PostScreen(
                     )
             ) {
                 PostSearchBar(
+                    state = keyword,
+                    onSearch = onSearch,
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 12.dp)
                 )
@@ -101,6 +106,15 @@ fun PostScreen(
                         onLongClick = { onPostLongClick(post.id) }
                     )
                 }
+            }
+
+            if (uiState.posts.isEmpty() && uiState.searchedKeyword.isNotBlank()) {
+                Text(
+                    text = "검색 결과가 없습니다.",
+                    modifier = Modifier.align(Alignment.Center),
+                    color = SoptTheme.colors.textSecondary,
+                    style = SoptTheme.typography.m18
+                )
             }
 
             PostFloatingButton(
@@ -193,8 +207,10 @@ private fun PostScreenPreview() {
         PostScreen(
             uiState = PostUiState(posts = posts),
             listState = rememberLazyListState(),
+            keyword = rememberTextFieldState(),
             title = rememberTextFieldState(),
             content = rememberTextFieldState(),
+            onSearch = {},
             onFloatingButtonClick = {},
             onSheetDismiss = {},
             onCreateClick = {},

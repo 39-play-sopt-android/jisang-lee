@@ -17,6 +17,7 @@ class PostViewModel(
     private val postRepository: PostRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
+    val keyword = TextFieldState()
     val title = TextFieldState()
     val content = TextFieldState()
 
@@ -40,6 +41,7 @@ class PostViewModel(
 
     fun onIntent(intent: PostIntent) {
         when (intent) {
+            PostIntent.SearchClicked -> onSearch()
             is PostIntent.InputChanged -> onInputChanged(intent.title, intent.content)
             PostIntent.FloatingButtonClicked -> onFloatingButtonClicked()
             PostIntent.SheetDismissed -> onSheetDismissed()
@@ -48,27 +50,38 @@ class PostViewModel(
             PostIntent.DeleteDialogDismissed -> onDeleteDialogDismissed()
             PostIntent.DeleteClicked -> onDelete()
             PostIntent.ErrorMessageShown -> onErrorMessageShown()
-            PostIntent.PostCreatedHandled -> onPostCreatedHandled()
+            PostIntent.ScrollToTopHandled -> onScrollToTopHandled()
         }
     }
 
-    private fun loadPosts(isPostCreated: Boolean = false) {
+    private fun loadPosts(
+        keyword: String = _uiState.value.searchedKeyword,
+        shouldScrollToTop: Boolean = false
+    ) {
         viewModelScope.launch {
-            postRepository.getPosts()
+            postRepository.getPosts(keyword = keyword)
                 .onSuccess { posts ->
                     _uiState.update { state ->
                         state.copy(
                             posts = posts,
-                            isPostCreated = isPostCreated
+                            searchedKeyword = keyword,
+                            shouldScrollToTop = shouldScrollToTop
                         )
                     }
                 }
-                .onFailure {
+                .onFailure { throwable ->
                     _uiState.update { state ->
-                        state.copy(errorMessage = "게시글을 불러오지 못했어요.")
+                        state.copy(errorMessage = throwable.serverMessage() ?: "게시글을 불러오지 못했어요.")
                     }
                 }
         }
+    }
+
+    private fun onSearch() {
+        loadPosts(
+            keyword = keyword.text.toString(),
+            shouldScrollToTop = true
+        )
     }
 
     private fun onInputChanged(titleText: String, contentText: String) {
@@ -106,7 +119,7 @@ class PostViewModel(
                 .onSuccess {
                     title.clearText()
                     content.clearText()
-                    loadPosts(isPostCreated = true)
+                    loadPosts(shouldScrollToTop = true)
                 }
                 .onFailure { throwable ->
                     _uiState.update { state ->
@@ -157,9 +170,9 @@ class PostViewModel(
         }
     }
 
-    private fun onPostCreatedHandled() {
+    private fun onScrollToTopHandled() {
         _uiState.update { state ->
-            state.copy(isPostCreated = false)
+            state.copy(shouldScrollToTop = false)
         }
     }
 }

@@ -10,10 +10,13 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface PostService {
     @GET("api/v1/posts")
-    suspend fun getPosts(): BaseResponse<PostListResponse>
+    suspend fun getPosts(
+        @Query("keyword") keyword: String
+    ): BaseResponse<PostListResponse>
 
     @POST("api/v1/posts")
     suspend fun createPost(

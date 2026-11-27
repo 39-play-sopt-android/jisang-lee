@@ -1,6 +1,7 @@
 package org.sopt.play.post.presentation
 
 sealed interface PostIntent {
+    data object SearchClicked : PostIntent
     data class InputChanged(val title: String, val content: String) : PostIntent
     data object FloatingButtonClicked : PostIntent
     data object SheetDismissed : PostIntent
@@ -9,5 +10,5 @@ sealed interface PostIntent {
     data object DeleteDialogDismissed : PostIntent
     data object DeleteClicked : PostIntent
     data object ErrorMessageShown : PostIntent
-    data object PostCreatedHandled : PostIntent
+    data object ScrollToTopHandled : PostIntent
 }

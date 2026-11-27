@@ -6,8 +6,8 @@ import org.sopt.play.post.model.Post
 class PostRepository(
     private val service: PostService
 ) {
-    suspend fun getPosts(): Result<List<Post>> = runCatching {
-        service.getPosts().data.posts.map { post -> post.toPost() }
+    suspend fun getPosts(keyword: String): Result<List<Post>> = runCatching {
+        service.getPosts(keyword = keyword).data.posts.map { post -> post.toPost() }
     }
 
     suspend fun createPost(
