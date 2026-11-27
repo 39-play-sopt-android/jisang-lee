@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
@@ -40,6 +41,7 @@ fun SoptTextField(
     placeholder: String,
     modifier: Modifier = Modifier,
     errorText: String? = null,
+    inputTransformation: InputTransformation? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onKeyboardAction: KeyboardActionHandler? = null,
     contentType: ContentType? = null
@@ -62,6 +64,7 @@ fun SoptTextField(
                     errorText = errorText,
                     autofillContentType = contentType
                 ),
+            inputTransformation = inputTransformation,
             lineLimits = TextFieldLineLimits.SingleLine,
             textStyle = SoptTheme.typography.m18.copy(
                 color = inputColor

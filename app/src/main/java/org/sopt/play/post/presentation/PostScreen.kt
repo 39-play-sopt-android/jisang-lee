@@ -1,6 +1,7 @@
 package org.sopt.play.post.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,13 +15,18 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
@@ -30,6 +36,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import org.sopt.play.R
 import org.sopt.play.post.model.Post
+import org.sopt.play.post.presentation.component.PostBottomSheet
 import org.sopt.play.post.presentation.component.PostCard
 import org.sopt.play.post.presentation.component.PostSearchBar
 import org.sopt.play.ui.theme.SoptPalette
@@ -38,6 +45,12 @@ import org.sopt.play.ui.theme.SoptTheme
 @Composable
 fun PostScreen(
     uiState: PostUiState,
+    listState: LazyListState,
+    title: TextFieldState,
+    content: TextFieldState,
+    onFloatingButtonClick: () -> Unit,
+    onSheetDismiss: () -> Unit,
+    onCreateClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -71,6 +84,7 @@ fun PostScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
+                state = listState,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -83,16 +97,28 @@ fun PostScreen(
             }
 
             PostFloatingButton(
+                onClick = onFloatingButtonClick,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = 16.dp, bottom = 20.dp)
             )
         }
     }
+
+    if (uiState.isSheetVisible) {
+        PostBottomSheet(
+            title = title,
+            content = content,
+            isCreateEnabled = uiState.isCreateEnabled,
+            onDismissRequest = onSheetDismiss,
+            onCreateClick = onCreateClick
+        )
+    }
 }
 
 @Composable
 private fun PostFloatingButton(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -106,10 +132,9 @@ private fun PostFloatingButton(
                     offset = DpOffset(x = 0.dp, y = 4.dp)
                 )
             )
-            .background(
-                color = SoptPalette.Red,
-                shape = CircleShape
-            ),
+            .clip(CircleShape)
+            .background(SoptPalette.Red)
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Icon(
@@ -152,7 +177,13 @@ private fun PostScreenPreview() {
 
     SoptTheme {
         PostScreen(
-            uiState = PostUiState(posts = posts)
+            uiState = PostUiState(posts = posts),
+            listState = rememberLazyListState(),
+            title = rememberTextFieldState(),
+            content = rememberTextFieldState(),
+            onFloatingButtonClick = {},
+            onSheetDismiss = {},
+            onCreateClick = {}
         )
     }
 }
@@ -162,6 +193,7 @@ private fun PostScreenPreview() {
 private fun PostFloatingButtonPreview() {
     SoptTheme {
         PostFloatingButton(
+            onClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }

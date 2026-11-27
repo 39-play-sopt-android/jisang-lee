@@ -92,7 +92,8 @@ fun AppNavHost(
 
         composable<AppRoute.Post> {
             PostRoute(
-                repository = postRepository
+                postRepository = postRepository,
+                authRepository = authRepository
             )
         }
     }

@@ -1,6 +1,7 @@
 package org.sopt.play.post.presentation
 
 import android.widget.Toast
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -12,22 +13,28 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import org.sopt.play.auth.data.AuthRepository
 import org.sopt.play.post.data.PostRepository
 
 @Composable
 fun PostRoute(
-    repository: PostRepository
+    postRepository: PostRepository,
+    authRepository: AuthRepository
 ) {
     val viewModel: PostViewModel = viewModel(
         factory = viewModelFactory {
             initializer {
-                PostViewModel(repository = repository)
+                PostViewModel(
+                    postRepository = postRepository,
+                    authRepository = authRepository
+                )
             }
         }
     )
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val listState = rememberLazyListState()
 
     LaunchedEffect(viewModel, lifecycleOwner, context) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -40,7 +47,20 @@ fun PostRoute(
         }
     }
 
+    LaunchedEffect(uiState.isPostCreated) {
+        if (uiState.isPostCreated) {
+            listState.scrollToItem(index = 0)
+            viewModel.onIntent(PostIntent.PostCreatedHandled)
+        }
+    }
+
     PostScreen(
-        uiState = uiState
+        uiState = uiState,
+        listState = listState,
+        title = viewModel.title,
+        content = viewModel.content,
+        onFloatingButtonClick = { viewModel.onIntent(PostIntent.FloatingButtonClicked) },
+        onSheetDismiss = { viewModel.onIntent(PostIntent.SheetDismissed) },
+        onCreateClick = { viewModel.onIntent(PostIntent.CreateClicked) }
     )
 }
