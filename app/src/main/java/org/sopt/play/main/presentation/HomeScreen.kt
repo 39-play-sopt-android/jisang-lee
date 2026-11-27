@@ -40,6 +40,7 @@ import org.sopt.play.ui.theme.SoptTheme
 fun HomeScreen(
     name: String,
     uiState: HomeUiState,
+    onSearchClick: () -> Unit,
     onMenuSelected: (String) -> Unit,
     onCategorySelected: (String) -> Unit,
     onFavoriteChanged: (String, Boolean) -> Unit,
@@ -63,7 +64,7 @@ fun HomeScreen(
                     )
             ) {
                 HomeTopBar(
-                    onSearchClick = {}
+                    onSearchClick = onSearchClick
                 )
             }
         }
@@ -162,6 +163,7 @@ private fun HomeScreenPreview() {
         HomeScreen(
             name = HomeSampleData.userName,
             uiState = HomeUiState(products = HomeSampleData.products),
+            onSearchClick = {},
             onMenuSelected = {},
             onCategorySelected = {},
             onFavoriteChanged = { _, _ -> }
@@ -176,6 +178,7 @@ private fun HomeProductsPreview() {
         HomeScreen(
             name = HomeSampleData.userName,
             uiState = HomeUiState(products = HomeSampleData.products),
+            onSearchClick = {},
             onMenuSelected = {},
             onCategorySelected = {},
             onFavoriteChanged = { _, _ -> },
@@ -198,6 +201,7 @@ private fun HomeScreenLongNamePreview() {
         HomeScreen(
             name = "이지상의이름은이지상이다",
             uiState = HomeUiState(products = HomeSampleData.products),
+            onSearchClick = {},
             onMenuSelected = {},
             onCategorySelected = {},
             onFavoriteChanged = { _, _ -> }

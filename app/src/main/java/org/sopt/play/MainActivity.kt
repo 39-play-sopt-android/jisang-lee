@@ -15,7 +15,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             SoptTheme {
                 AppNavHost(
-                    authRepository = app.authRepository
+                    authRepository = app.authRepository,
+                    postRepository = app.postRepository
                 )
             }
         }

@@ -39,6 +39,7 @@ import org.sopt.play.ui.theme.SoptTheme
 fun MainScreen(
     name: String,
     homeUiState: HomeUiState,
+    onSearchClick: () -> Unit,
     onMenuSelected: (String) -> Unit,
     onCategorySelected: (String) -> Unit,
     onFavoriteChanged: (String, Boolean) -> Unit,
@@ -94,6 +95,7 @@ fun MainScreen(
                 HomeScreen(
                     name = name,
                     uiState = homeUiState,
+                    onSearchClick = onSearchClick,
                     onMenuSelected = onMenuSelected,
                     onCategorySelected = onCategorySelected,
                     onFavoriteChanged = onFavoriteChanged
@@ -149,6 +151,7 @@ private fun MainScreenPreview(
             MainScreen(
                 name = HomeSampleData.userName,
                 homeUiState = HomeUiState(products = HomeSampleData.products),
+                onSearchClick = {},
                 onMenuSelected = {},
                 onCategorySelected = {},
                 onFavoriteChanged = { _, _ -> },

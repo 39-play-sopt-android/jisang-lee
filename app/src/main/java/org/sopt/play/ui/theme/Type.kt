@@ -49,8 +49,10 @@ data class SoptTypography(
     val b28: TextStyle = soptTextStyle(28, FontWeight.Bold),
     val m18: TextStyle = soptTextStyle(18, FontWeight.Medium),
     val sb16: TextStyle = soptTextStyle(16, FontWeight.SemiBold),
+    val m16: TextStyle = soptTextStyle(16, FontWeight.Medium),
     val m14: TextStyle = soptTextStyle(14, FontWeight.Medium),
     val sb14: TextStyle = soptTextStyle(14, FontWeight.SemiBold),
     val r14: TextStyle = soptTextStyle(14, FontWeight.Normal),
+    val m12: TextStyle = soptTextStyle(12, FontWeight.Medium),
 )
 

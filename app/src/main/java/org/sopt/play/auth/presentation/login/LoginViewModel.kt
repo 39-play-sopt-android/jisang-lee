@@ -66,12 +66,21 @@ class LoginViewModel(
             return
         }
 
-        val isLoggedIn = repository.login(emailText, passwordText)
-        _uiState.update { state ->
-            state.copy(
-                isLoggedIn = isLoggedIn,
-                errorMessage = if (isLoggedIn) null else "이메일 또는 비밀번호가 올바르지 않아요."
-            )
+        viewModelScope.launch {
+            repository.login(emailText, passwordText)
+                .onSuccess { isLoggedIn ->
+                    _uiState.update { state ->
+                        state.copy(
+                            isLoggedIn = isLoggedIn,
+                            errorMessage = if (isLoggedIn) null else "이메일 또는 비밀번호가 올바르지 않아요."
+                        )
+                    }
+                }
+                .onFailure {
+                    _uiState.update { state ->
+                        state.copy(errorMessage = "로그인하지 못했어요.")
+                    }
+                }
         }
     }
 

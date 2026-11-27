@@ -17,10 +17,13 @@ import org.sopt.play.auth.navigation.authNavGraph
 import org.sopt.play.main.presentation.HomeIntent
 import org.sopt.play.main.presentation.HomeViewModel
 import org.sopt.play.main.presentation.MainScreen
+import org.sopt.play.post.data.PostRepository
+import org.sopt.play.post.presentation.PostRoute
 
 @Composable
 fun AppNavHost(
     authRepository: AuthRepository,
+    postRepository: PostRepository,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -69,6 +72,11 @@ fun AppNavHost(
                 MainScreen(
                     name = currentUser.name,
                     homeUiState = homeUiState,
+                    onSearchClick = {
+                        navController.navigate(AppRoute.Post) {
+                            launchSingleTop = true
+                        }
+                    },
                     onMenuSelected = { menu ->
                         homeViewModel.onIntent(HomeIntent.MenuSelected(menu))
                     },
@@ -80,6 +88,13 @@ fun AppNavHost(
                     }
                 )
             }
+        }
+
+        composable<AppRoute.Post> {
+            PostRoute(
+                postRepository = postRepository,
+                authRepository = authRepository
+            )
         }
     }
 }
