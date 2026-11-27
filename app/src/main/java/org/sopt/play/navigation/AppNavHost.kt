@@ -17,11 +17,13 @@ import org.sopt.play.auth.navigation.authNavGraph
 import org.sopt.play.main.presentation.HomeIntent
 import org.sopt.play.main.presentation.HomeViewModel
 import org.sopt.play.main.presentation.MainScreen
-import org.sopt.play.post.presentation.PostScreen
+import org.sopt.play.post.data.PostRepository
+import org.sopt.play.post.presentation.PostRoute
 
 @Composable
 fun AppNavHost(
     authRepository: AuthRepository,
+    postRepository: PostRepository,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -89,7 +91,9 @@ fun AppNavHost(
         }
 
         composable<AppRoute.Post> {
-            PostScreen()
+            PostRoute(
+                repository = postRepository
+            )
         }
     }
 }
