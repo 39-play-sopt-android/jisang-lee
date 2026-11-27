@@ -6,6 +6,6 @@ import org.sopt.play.network.ApiFactory
 import org.sopt.play.post.data.PostRepository
 
 class SoptApplication : Application() {
-    val authRepository by lazy { AuthRepository() }
+    val authRepository by lazy { AuthRepository(ApiFactory.authService) }
     val postRepository by lazy { PostRepository(ApiFactory.postService) }
 }
