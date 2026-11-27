@@ -44,6 +44,9 @@ class PostViewModel(
             PostIntent.FloatingButtonClicked -> onFloatingButtonClicked()
             PostIntent.SheetDismissed -> onSheetDismissed()
             PostIntent.CreateClicked -> onCreate()
+            is PostIntent.PostLongClicked -> onPostLongClicked(intent.postId)
+            PostIntent.DeleteDialogDismissed -> onDeleteDialogDismissed()
+            PostIntent.DeleteClicked -> onDelete()
             PostIntent.ErrorMessageShown -> onErrorMessageShown()
             PostIntent.PostCreatedHandled -> onPostCreatedHandled()
         }
@@ -108,6 +111,41 @@ class PostViewModel(
                 .onFailure { throwable ->
                     _uiState.update { state ->
                         state.copy(errorMessage = throwable.serverMessage() ?: "게시글을 작성하지 못했어요.")
+                    }
+                }
+        }
+    }
+
+    private fun onPostLongClicked(postId: Long) {
+        _uiState.update { state ->
+            state.copy(deletePostId = postId)
+        }
+    }
+
+    private fun onDeleteDialogDismissed() {
+        _uiState.update { state ->
+            state.copy(deletePostId = null)
+        }
+    }
+
+    private fun onDelete() {
+        val postId = _uiState.value.deletePostId ?: return
+        val authorizationCode = authRepository.authorizationCode ?: return
+
+        _uiState.update { state ->
+            state.copy(deletePostId = null)
+        }
+        viewModelScope.launch {
+            postRepository.deletePost(
+                authorizationCode = authorizationCode,
+                postId = postId
+            )
+                .onSuccess {
+                    loadPosts()
+                }
+                .onFailure { throwable ->
+                    _uiState.update { state ->
+                        state.copy(errorMessage = throwable.serverMessage() ?: "게시글을 삭제하지 못했어요.")
                     }
                 }
         }

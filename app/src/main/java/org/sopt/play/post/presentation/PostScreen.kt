@@ -38,6 +38,7 @@ import org.sopt.play.R
 import org.sopt.play.post.model.Post
 import org.sopt.play.post.presentation.component.PostBottomSheet
 import org.sopt.play.post.presentation.component.PostCard
+import org.sopt.play.post.presentation.component.PostDeleteDialog
 import org.sopt.play.post.presentation.component.PostSearchBar
 import org.sopt.play.ui.theme.SoptPalette
 import org.sopt.play.ui.theme.SoptTheme
@@ -51,6 +52,9 @@ fun PostScreen(
     onFloatingButtonClick: () -> Unit,
     onSheetDismiss: () -> Unit,
     onCreateClick: () -> Unit,
+    onPostLongClick: (Long) -> Unit,
+    onDeleteDialogDismiss: () -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -92,7 +96,10 @@ fun PostScreen(
                     items = uiState.posts,
                     key = { post -> post.id }
                 ) { post ->
-                    PostCard(post = post)
+                    PostCard(
+                        post = post,
+                        onLongClick = { onPostLongClick(post.id) }
+                    )
                 }
             }
 
@@ -112,6 +119,13 @@ fun PostScreen(
             isCreateEnabled = uiState.isCreateEnabled,
             onDismissRequest = onSheetDismiss,
             onCreateClick = onCreateClick
+        )
+    }
+
+    if (uiState.deletePostId != null) {
+        PostDeleteDialog(
+            onDismissRequest = onDeleteDialogDismiss,
+            onDeleteClick = onDeleteClick
         )
     }
 }
@@ -183,7 +197,10 @@ private fun PostScreenPreview() {
             content = rememberTextFieldState(),
             onFloatingButtonClick = {},
             onSheetDismiss = {},
-            onCreateClick = {}
+            onCreateClick = {},
+            onPostLongClick = {},
+            onDeleteDialogDismiss = {},
+            onDeleteClick = {}
         )
     }
 }

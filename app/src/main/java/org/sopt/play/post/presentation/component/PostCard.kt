@@ -1,6 +1,7 @@
 package org.sopt.play.post.presentation.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,6 +25,7 @@ import org.sopt.play.ui.theme.SoptTheme
 @Composable
 fun PostCard(
     post: Post,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val cardShape = RoundedCornerShape(20.dp)
@@ -30,9 +33,11 @@ fun PostCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(
-                color = SoptPalette.Gray1,
-                shape = cardShape
+            .clip(cardShape)
+            .background(SoptPalette.Gray1)
+            .combinedClickable(
+                onClick = {},
+                onLongClick = onLongClick
             )
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -106,7 +111,10 @@ private fun PostCardPreview() {
     SoptTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             posts.forEach { post ->
-                PostCard(post = post)
+                PostCard(
+                    post = post,
+                    onLongClick = {}
+                )
             }
         }
     }

@@ -61,6 +61,9 @@ fun PostRoute(
         content = viewModel.content,
         onFloatingButtonClick = { viewModel.onIntent(PostIntent.FloatingButtonClicked) },
         onSheetDismiss = { viewModel.onIntent(PostIntent.SheetDismissed) },
-        onCreateClick = { viewModel.onIntent(PostIntent.CreateClicked) }
+        onCreateClick = { viewModel.onIntent(PostIntent.CreateClicked) },
+        onPostLongClick = { postId -> viewModel.onIntent(PostIntent.PostLongClicked(postId)) },
+        onDeleteDialogDismiss = { viewModel.onIntent(PostIntent.DeleteDialogDismissed) },
+        onDeleteClick = { viewModel.onIntent(PostIntent.DeleteClicked) }
     )
 }

@@ -7,5 +7,6 @@ data class PostUiState(
     val isSheetVisible: Boolean = false,
     val isCreateEnabled: Boolean = false,
     val isPostCreated: Boolean = false,
+    val deletePostId: Long? = null,
     val errorMessage: String? = null
 )
