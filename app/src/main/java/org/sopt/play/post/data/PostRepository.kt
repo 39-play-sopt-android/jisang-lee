@@ -25,4 +25,14 @@ class PostRepository(
             )
         )
     }
+
+    suspend fun deletePost(
+        authorizationCode: String,
+        postId: Long
+    ): Result<Unit> = runCatching {
+        service.deletePost(
+            authorizationCode = authorizationCode,
+            postId = postId
+        )
+    }
 }
