@@ -4,11 +4,13 @@ import org.sopt.play.network.BaseResponse
 import org.sopt.play.post.data.dto.CreatePostRequest
 import org.sopt.play.post.data.dto.PostListResponse
 import org.sopt.play.post.data.dto.PostResponse
+import org.sopt.play.post.data.dto.UpdatePostRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -22,6 +24,13 @@ interface PostService {
     suspend fun createPost(
         @Header("Authorization") authorizationCode: String,
         @Body request: CreatePostRequest
+    ): BaseResponse<PostResponse>
+
+    @PUT("api/v1/posts/{postId}")
+    suspend fun updatePost(
+        @Header("Authorization") authorizationCode: String,
+        @Path("postId") postId: Long,
+        @Body request: UpdatePostRequest
     ): BaseResponse<PostResponse>
 
     @DELETE("api/v1/posts/{postId}")

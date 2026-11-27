@@ -1,6 +1,7 @@
 package org.sopt.play.post.data
 
 import org.sopt.play.post.data.dto.CreatePostRequest
+import org.sopt.play.post.data.dto.UpdatePostRequest
 import org.sopt.play.post.model.Post
 
 class PostRepository(
@@ -22,6 +23,22 @@ class PostRepository(
                 title = title,
                 content = content,
                 author = author
+            )
+        )
+    }
+
+    suspend fun updatePost(
+        authorizationCode: String,
+        postId: Long,
+        title: String,
+        content: String
+    ): Result<Unit> = runCatching {
+        service.updatePost(
+            authorizationCode = authorizationCode,
+            postId = postId,
+            request = UpdatePostRequest(
+                title = title,
+                content = content
             )
         )
     }

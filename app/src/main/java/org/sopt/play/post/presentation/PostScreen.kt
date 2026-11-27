@@ -51,10 +51,15 @@ fun PostScreen(
     keyword: TextFieldState,
     title: TextFieldState,
     content: TextFieldState,
+    editTitle: TextFieldState,
+    editContent: TextFieldState,
     onSearch: () -> Unit,
     onFloatingButtonClick: () -> Unit,
     onSheetDismiss: () -> Unit,
     onCreateClick: () -> Unit,
+    onPostClick: (Post) -> Unit,
+    onEditSheetDismiss: () -> Unit,
+    onEditClick: () -> Unit,
     onPostLongClick: (Long) -> Unit,
     onDeleteDialogDismiss: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -103,6 +108,7 @@ fun PostScreen(
                 ) { post ->
                     PostCard(
                         post = post,
+                        onClick = { onPostClick(post) },
                         onLongClick = { onPostLongClick(post.id) }
                     )
                 }
@@ -130,9 +136,19 @@ fun PostScreen(
         PostBottomSheet(
             title = title,
             content = content,
-            isCreateEnabled = uiState.isCreateEnabled,
+            isCompleteEnabled = uiState.isCreateEnabled,
             onDismissRequest = onSheetDismiss,
-            onCreateClick = onCreateClick
+            onCompleteClick = onCreateClick
+        )
+    }
+
+    if (uiState.editPost != null) {
+        PostBottomSheet(
+            title = editTitle,
+            content = editContent,
+            isCompleteEnabled = uiState.isEditEnabled,
+            onDismissRequest = onEditSheetDismiss,
+            onCompleteClick = onEditClick
         )
     }
 
@@ -210,10 +226,15 @@ private fun PostScreenPreview() {
             keyword = rememberTextFieldState(),
             title = rememberTextFieldState(),
             content = rememberTextFieldState(),
+            editTitle = rememberTextFieldState(),
+            editContent = rememberTextFieldState(),
             onSearch = {},
             onFloatingButtonClick = {},
             onSheetDismiss = {},
             onCreateClick = {},
+            onPostClick = {},
+            onEditSheetDismiss = {},
+            onEditClick = {},
             onPostLongClick = {},
             onDeleteDialogDismiss = {},
             onDeleteClick = {}

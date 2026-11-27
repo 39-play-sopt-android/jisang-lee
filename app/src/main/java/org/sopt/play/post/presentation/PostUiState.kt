@@ -8,6 +8,8 @@ data class PostUiState(
     val isSheetVisible: Boolean = false,
     val isCreateEnabled: Boolean = false,
     val shouldScrollToTop: Boolean = false,
+    val editPost: Post? = null,
+    val isEditEnabled: Boolean = false,
     val deletePostId: Long? = null,
     val errorMessage: String? = null
 )

@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -35,9 +34,9 @@ private const val MAX_CONTENT_LENGTH = 1000
 fun PostBottomSheet(
     title: TextFieldState,
     content: TextFieldState,
-    isCreateEnabled: Boolean,
+    isCompleteEnabled: Boolean,
     onDismissRequest: () -> Unit,
-    onCreateClick: () -> Unit,
+    onCompleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -74,7 +73,7 @@ fun PostBottomSheet(
                     state = title,
                     label = "제목",
                     placeholder = "제목을 입력하세요.",
-                    inputTransformation = InputTransformation.maxLength(MAX_TITLE_LENGTH),
+                    inputTransformation = maxLengthTransformation(MAX_TITLE_LENGTH),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
 
@@ -82,16 +81,22 @@ fun PostBottomSheet(
                     state = content,
                     label = "본문",
                     placeholder = "본문을 입력하세요.",
-                    inputTransformation = InputTransformation.maxLength(MAX_CONTENT_LENGTH),
+                    inputTransformation = maxLengthTransformation(MAX_CONTENT_LENGTH),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                 )
             }
 
             SoptPrimaryButton(
                 text = "완료",
-                onClick = onCreateClick,
-                enabled = isCreateEnabled
+                onClick = onCompleteClick,
+                enabled = isCompleteEnabled
             )
         }
+    }
+}
+
+private fun maxLengthTransformation(maxLength: Int) = InputTransformation {
+    if (length > maxLength && length > originalText.length) {
+        revertAllChanges()
     }
 }

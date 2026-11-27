@@ -25,6 +25,7 @@ import org.sopt.play.ui.theme.SoptTheme
 @Composable
 fun PostCard(
     post: Post,
+    onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -36,7 +37,7 @@ fun PostCard(
             .clip(cardShape)
             .background(SoptPalette.Gray1)
             .combinedClickable(
-                onClick = {},
+                onClick = onClick,
                 onLongClick = onLongClick
             )
             .padding(20.dp),
@@ -113,6 +114,7 @@ private fun PostCardPreview() {
             posts.forEach { post ->
                 PostCard(
                     post = post,
+                    onClick = {},
                     onLongClick = {}
                 )
             }
